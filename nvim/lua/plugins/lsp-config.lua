@@ -30,28 +30,23 @@ return {
 				capabilites = capabilities,
 			})
 
-			-- configure css server
 			lspconfig["cssls"].setup({
 				capabilities = capabilities,
 			})
 
-			-- configure tailwindcss server
 			lspconfig["tailwindcss"].setup({
 				capabilities = capabilities,
 			})
 
-			-- configure prisma orm server
 			lspconfig["prismals"].setup({
 				capabilities = capabilities,
 			})
 
-			-- configure graphql language server
 			lspconfig["graphql"].setup({
 				capabilities = capabilities,
 				filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
 			})
 
-			-- configure emmet language server
 			lspconfig["emmet_ls"].setup({
 				capabilities = capabilities,
 				filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
