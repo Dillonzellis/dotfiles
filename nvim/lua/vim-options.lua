@@ -10,6 +10,9 @@ vim.opt.number = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- use system clipboard as default register
+vim.opt.clipboard:append("unnamedplus")
+
 -- delete single character without copying into register
 vim.keymap.set("n", "x", '"_x')
 
