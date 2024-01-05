@@ -16,6 +16,8 @@ vim.opt.clipboard:append("unnamedplus")
 -- delete single character without copying into register
 vim.keymap.set("n", "x", '"_x')
 
+vim.keymap.set("n", "<C-m>", ":Ex<CR>")
+
 vim.keymap.set("n", "<C-s>", ":w<CR>")
 
 vim.keymap.set("n", "<leader>r", ":set invwrap<CR>")
@@ -26,11 +28,9 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 -- disable Q
 vim.keymap.set("n", "Q", "<nop>")
 
--- scroll up/down and center screen
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- Navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
 vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
