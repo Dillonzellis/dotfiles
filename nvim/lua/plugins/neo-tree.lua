@@ -8,8 +8,8 @@ return {
     { "<leader>fe", false },
     { "<leader>fE", false },
     { "<leader>ge", false },
+
     -- change a keymap
-    { "<C-m>", desc = "Explorer NeoTree (root dir)", remap = true },
-    -- add a keymap to browse plugin files
+    { "<C-m>", "<cmd>Neotree toggle<cr>", desc = "Explorer NeoTree (root dir)", remap = true },
   },
 }
