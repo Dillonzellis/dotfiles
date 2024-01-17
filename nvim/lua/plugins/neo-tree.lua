@@ -1,12 +1,15 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
-  branch = "v3.x",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons",
-    "MunifTanjim/nui.nvim",
+  keys = {
+    -- disable the keymap to grep files
+    { "<leader>be", false },
+    { "<leader>e", false },
+    { "<leader>E", false },
+    { "<leader>fe", false },
+    { "<leader>fE", false },
+    { "<leader>ge", false },
+
+    -- change a keymap
+    { "<C-m>", "<cmd>Neotree toggle<cr>", desc = "Explorer NeoTree (root dir)", remap = true },
   },
-  config = function()
-    vim.keymap.set("n", "<C-n>", ":Neotree toggle<CR>", {})
-  end,
 }
