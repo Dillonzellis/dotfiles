@@ -30,26 +30,12 @@ return {
         capabilites = capabilities,
       })
 
-      lspconfig["cssls"].setup({
-        capabilities = capabilities,
-      })
-
       lspconfig["tailwindcss"].setup({
         capabilities = capabilities,
       })
 
       lspconfig["prismals"].setup({
         capabilities = capabilities,
-      })
-
-      lspconfig["graphql"].setup({
-        capabilities = capabilities,
-        filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-      })
-
-      lspconfig["emmet_ls"].setup({
-        capabilities = capabilities,
-        filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
       })
 
       lspconfig["pyright"].setup({
