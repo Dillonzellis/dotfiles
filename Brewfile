@@ -31,14 +31,14 @@ brew "tree"
 brew "yazi"                       
 brew "zsh-autosuggestions"        
 brew "zsh-syntax-highlighting"    
-brew "bat"                        
-brew "fd"                         
-brew "htop"                       
-brew "btop"                       
-brew "jq"                         
-brew "yq"                         
-brew "tldr"                       
-brew "zoxide"                     
+# brew "bat"                        
+# brew "fd"                         
+# brew "htop"                       
+# brew "btop"                       
+# brew "jq"                         
+# brew "yq"                         
+# brew "tldr"                       
+# brew "zoxide"                     
 
 # ==============================================================================
 # ARCHIVE & FILE TOOLS
@@ -50,27 +50,27 @@ brew "gzip"
 # ==============================================================================
 # DATABASE TOOLS
 # ==============================================================================
-brew "duckdb"                     
-brew "sqlite"                     
-brew "mongodb/brew/mongodb-database-tools"     
-brew "mongodb/brew/mongodb-community"          
+# brew "duckdb"                     
+# brew "sqlite"                     
+# brew "mongodb/brew/mongodb-database-tools"     
+# brew "mongodb/brew/mongodb-community"          
 
 # ==============================================================================
 # PROGRAMMING LANGUAGES & RUNTIMES
 # ==============================================================================
 brew "node"                       
-brew "python@3.12"                
-brew "pipx"                       
-brew "go"                         
+# brew "python@3.12"                
+# brew "pipx"                       
+# brew "go"                         
 
 # ==============================================================================
 # INFRASTRUCTURE & DEVOPS
 # ==============================================================================
-brew "hashicorp/tap/terraform"    
-brew "docker"                     
-brew "docker-compose"             
-brew "kubectl"                    
-brew "helm"                       
+# brew "hashicorp/tap/terraform"    
+# brew "docker"                     
+# brew "docker-compose"             
+# brew "kubectl"                    
+# brew "helm"                       
 
 # ==============================================================================
 # VERSION CONTROL & GIT TOOLS
@@ -99,9 +99,9 @@ brew "smudge/smudge/nightlight"
 # GUI APPLICATIONS - DEVELOPMENT
 # ==============================================================================
 cask "ghostty"                    
-cask "orbstack"                   
-cask "visual-studio-code"         
-cask "docker"                     
+# cask "orbstack"                   
+# cask "visual-studio-code"         
+# cask "docker"                     
 
 # ==============================================================================
 # GUI APPLICATIONS - PRODUCTIVITY
@@ -119,9 +119,9 @@ cask "google-chrome"
 # ==============================================================================
 # GUI APPLICATIONS - COMMUNICATION
 # ==============================================================================
-cask "slack"                      
-cask "discord"                    
-cask "zoom"                       
+# cask "slack"                      
+# cask "discord"                    
+# cask "zoom"                       
 
 # ==============================================================================
 # GUI APPLICATIONS - MEDIA & UTILITIES
@@ -134,7 +134,7 @@ cask "vlc"
 # ==============================================================================
 # MAC APP STORE APPS
 # ==============================================================================
-mas "Amphetamine", id: 937984704              
+# mas "Amphetamine", id: 937984704              
 # mas "Xcode", id: 497799835                    
 # mas "The Unarchiver", id: 425424353           
 
