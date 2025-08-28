@@ -25,7 +25,32 @@ alias desk="cd ~/Desktop"
 alias ns="npx fusion start"
 
 
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+config() {
+    # Check if user is trying to add current directory
+    if [[ "$1" == "add" && "$2" == "." ]]; then
+        echo "🚫 Error: 'config add .' is dangerous in a bare repository setup!"
+        echo "   This would add your entire home directory."
+        echo ""
+        echo "💡 Instead, use:"
+        echo "   config add .zshrc .gitconfig Brewfile    # Add specific files"
+        echo "   config add .config/nvim/                 # Add specific directories"
+        echo "   config add -i                           # Interactive add"
+        echo ""
+        echo "🔍 To see what's changed:"
+        echo "   config status --untracked-files=normal"
+        return 1
+    fi
+    
+    # Check for other potentially dangerous patterns
+    if [[ "$1" == "add" && "$2" == "*" ]]; then
+        echo "🚫 Error: 'config add *' is also dangerous!"
+        echo "   Use specific file paths instead."
+        return 1
+    fi
+    
+    # Execute the actual git command
+    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME "$@"
+}
 
 export EDITOR=nvim
 
