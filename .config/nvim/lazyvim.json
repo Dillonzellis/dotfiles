@@ -1,0 +1,29 @@
+{
+  "extras": [
+    "lazyvim.plugins.extras.coding.luasnip",
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.editor.harpoon2",
+    "lazyvim.plugins.extras.editor.inc-rename",
+    "lazyvim.plugins.extras.editor.leap",
+    "lazyvim.plugins.extras.editor.neo-tree",
+    "lazyvim.plugins.extras.editor.snacks_picker",
+    "lazyvim.plugins.extras.formatting.prettier",
+    "lazyvim.plugins.extras.lang.docker",
+    "lazyvim.plugins.extras.lang.git",
+    "lazyvim.plugins.extras.lang.java",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.sql",
+    "lazyvim.plugins.extras.lang.terraform",
+    "lazyvim.plugins.extras.lang.typescript",
+    "lazyvim.plugins.extras.lang.yaml",
+    "lazyvim.plugins.extras.ui.alpha",
+    "lazyvim.plugins.extras.util.dot",
+    "lazyvim.plugins.extras.util.mini-hipatterns"
+  ],
+  "install_version": 7,
+  "news": {
+    "NEWS.md": "10960"
+  },
+  "version": 8
+}
