@@ -1,6 +1,6 @@
 [user]
-	email = 31318165+Dillonzellis@users.noreply.github.com
-	name = dillonzellis
+	email = youremail@example.com
+	name = yourname
 [init]
 	defaultBranch = master
 [filter "lfs"]
