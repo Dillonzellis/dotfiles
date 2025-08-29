@@ -6,8 +6,6 @@
 # ==============================================================================
 tap "hashicorp/tap"
 tap "homebrew/services"
-tap "homebrew/cask-fonts"        
-tap "homebrew/cask-versions"     
 tap "jesseduffield/lazygit"
 tap "mongodb/brew"
 tap "smudge/smudge"
@@ -86,7 +84,7 @@ cask "font-0xproto-nerd-font"
 cask "font-fira-code-nerd-font"           
 cask "font-jetbrains-mono-nerd-font"      
 cask "font-meslo-lg-nerd-font"            
-cask "font-hack-nerd-font"                
+# cask "font-hack-nerd-font"                
 
 # ==============================================================================
 # SYSTEM UTILITIES
