@@ -151,6 +151,40 @@ if command -v fzf &>/dev/null && [ -f "$(brew --prefix)/opt/fzf/install" ]; then
 fi
 
 # ==============================================================================
+# STEP 6: SET UP GIT CONFIG
+# ==============================================================================
+
+setup_git_config() {
+
+  print_status "Step 6: Setting up git config from gitconfig template"
+  print_status "Setting up Git configuration..."
+
+  if [ -f "$HOME/.gitconfig.template" ] && [ ! -f "$HOME/.gitconfig" ]; then
+    print_status "Git config template found. Setting up personal config..."
+
+    read -p "Enter your Git username: " git_username
+    read -p "Enter your Git email (or press Enter for GitHub noreply): " git_email
+
+    # Default to GitHub noreply format if no email provided
+    if [ -z "$git_email" ]; then
+      print_status "Getting GitHub user ID for noreply email..."
+      # You could fetch this from GitHub API if needed
+      git_email="${git_username}@users.noreply.github.com"
+    fi
+
+    # Create actual .gitconfig from template
+    sed "s/YOUR_USERNAME/$git_username/g; s/YOUR_EMAIL@users.noreply.github.com/$git_email/g" \
+      "$HOME/.gitconfig.template" >"$HOME/.gitconfig"
+
+    print_success "Git configuration created with:"
+    print_success "  Name: $git_username"
+    print_success "  Email: $git_email"
+  else
+    print_status "Git configuration already exists or template not found"
+  fi
+}
+
+# ==============================================================================
 # STEP 6: MACOS SYSTEM PREFERENCES (OPTIONAL)
 # ==============================================================================
 if [ -f "$HOME/.macos" ]; then

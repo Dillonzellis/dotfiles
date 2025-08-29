@@ -1,49 +1,60 @@
 # Dotfiles
 
-> Personal macOS development environment with LazyVim, Homebrew packages, and shell configuration
+> My macOS development setup with LazyVim, tmux, and all the tools I actually use
 
-This repository contains my dotfiles managed as a bare Git repository for deployment across multiple machines. Includes a complete LazyVim Neovim setup, terminal configuration, and essential development tools.
+This is my personal dotfiles repo that I use across different machines. It's got my complete Neovim setup with LazyVim, terminal config, and pretty much everything I need to get coding quickly on a new Mac.
 
-## Features
+## What's included
 
-- Complete LazyVim Neovim configuration with TypeScript, React, Java support
-- Automated Homebrew package installation via Brewfile
-- Enhanced Zsh with autosuggestions and syntax highlighting
-- CLI tools: fzf, ripgrep, bat, fd, yazi
-- Development tools: Git, Docker, Terraform, Node.js, Python, Go
-- Terminal setup with Ghostty and Nerd Fonts
-- CLI tool for ghostty background opacity/blur. See .local/bin/gt
+- LazyVim Neovim config (TypeScript, React, Java, and more)
+- Homebrew packages via Brewfile - only the stuff I actually use
+- Zsh with autosuggestions and syntax highlighting
+- Useful CLI tools: fzf, ripgrep, yazi, etc.
+- tmux configuration with vim-style navigation
+- Ghostty terminal setup with Nerd Fonts
+- Custom script for ghostty opacity/blur control (check out `.local/bin/gt`)
 
-## Quick Setup
+## How this works
 
-### One-Line Install
+This uses a bare Git repository setup, which means your home directory becomes the working tree. The `config` command is just an alias for git that points to the bare repo. Only files you explicitly add with `config add` get tracked - everything else in your home directory is ignored by default.
+
+## Quick install
+
+Just run this and you're good to go:
 
 ```bash
 curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash
 ```
 
-### Manual Installation
+The script will:
 
-1. **Clone the repository**
+- Clone the dotfiles
+- Install Homebrew and all packages
+- Set up your Git config (it'll ask for your username/email)
+- Configure your shell
+
+## Manual install
+
+1. **Clone as bare repo**
 
    ```bash
    git clone --bare https://github.com/Dillonzellis/dotfiles.git $HOME/.dotfiles
    ```
 
-2. **Create the config alias**
+2. **Set up the config alias**
 
    ```bash
    alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
    ```
 
-3. **Backup existing dotfiles** (if any conflicts)
+3. **Backup any existing files**
 
    ```bash
    mkdir -p .config-backup
    config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
    ```
 
-4. **Checkout dotfiles**
+4. **Check out the files**
 
    ```bash
    config checkout
@@ -54,34 +65,42 @@ curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bi
 
    ```bash
    chmod +x ~/.local/bin/install-brew.sh
-   ~/scripts/install-brew.sh
+   ~/.local/bin/install-brew.sh
    ```
 
-6. **Restart terminal**
+6. **Set up Git config**
+   The setup script handles this, but if you're doing it manually:
+
+   ```bash
+   cp .gitconfig.template .gitconfig
+   # Edit .gitconfig with your info
+   ```
+
+7. **Restart your terminal**
 
    ```bash
    exec zsh
    ```
 
-### Managing Dotfiles
+## Managing your dotfiles
 
 ```bash
-# Check status
+# Check what's changed
 config status
 
-# Add new files
-config add .zshrc .gitconfig
+# Add new files (be specific - don't use 'config add .')
+config add .zshrc .tmux.conf
 
-# Commit changes
-config commit -m "Update configuration"
-
-# Push to remote
+# Commit and push
+config commit -m "Update shell config"
 config push
 ```
 
-## Adding New Packages
+**Important:** The `config` command has safety checks to prevent you from accidentally adding your entire home directory. Always add specific files.
 
-Edit the `Brewfile` and run:
+## Adding new packages
+
+Just edit the `Brewfile` and run:
 
 ```bash
 brew bundle --file=~/Brewfile
@@ -89,21 +108,33 @@ brew bundle --file=~/Brewfile
 
 ## Troubleshooting
 
-**Homebrew not in PATH (Apple Silicon)**
+**Homebrew not found (Apple Silicon Macs)**
 
 ```bash
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-**Neovim plugins not loading**
+**Neovim being weird**
 
 ```bash
 nvim --headless "+Lazy! sync" +qa
 ```
 
+**tmux session script not working**
+Make sure the script is executable:
+
+```bash
+chmod +x ~/.local/bin/tmux-session-dispensary.sh
+```
+
 ## Requirements
 
-- macOS (Monterey or later recommended)
-- Git
-- Terminal with Nerd Font support
+- macOS (tested on Monterey and newer)
+- That's pretty much it - the setup script handles everything else
+
+## Notes
+
+This setup assumes you're using Ghostty as your terminal and have a Nerd Font installed. If you use a different terminal, you might need to tweak some configs. The Brewfile installs fonts automatically, so you should be covered.
+
+Feel free to fork this and make it your own and let me know you find it useful or have suggestions.
