@@ -93,6 +93,7 @@ cask "font-meslo-lg-nerd-font"
 brew "mas"                        
 brew "mackup"                     
 brew "smudge/smudge/nightlight"   
+brew "flux"
 
 # ==============================================================================
 # GUI APPLICATIONS - DEVELOPMENT
