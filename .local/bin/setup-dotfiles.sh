@@ -95,8 +95,8 @@ print_status "Step 3: Installing Homebrew and packages"
 # Check if install-brew.sh exists in the dotfiles
 if [ -f "$HOME/.local/bin/install-brew.sh" ]; then
   print_status "Found install-brew.sh, running package installation..."
-  chmod +x "$HOME/scripts/install-brew.sh"
-  bash "$HOME/scripts/install-brew.sh"
+  chmod +x "$HOME/.local/bin/install-brew.sh"
+  bash "$HOME/.local/bin/install-brew.sh"
 elif [ -f "$HOME/Brewfile" ]; then
   print_status "Found Brewfile, installing packages directly..."
 
