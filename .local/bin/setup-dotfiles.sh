@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # setup-dotfiles.sh - Complete dotfiles setup with Homebrew integration
-# Usage: curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/setup-dotfiles.sh | bash
+# Usage: curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash
 
 set -e # Exit on any error
 
@@ -93,7 +93,7 @@ print_success "Dotfiles checked out successfully"
 print_status "Step 3: Installing Homebrew and packages"
 
 # Check if install-brew.sh exists in the dotfiles
-if [ -f "$HOME/scripts/install-brew.sh" ]; then
+if [ -f "$HOME/.local/bin/install-brew.sh" ]; then
   print_status "Found install-brew.sh, running package installation..."
   chmod +x "$HOME/scripts/install-brew.sh"
   bash "$HOME/scripts/install-brew.sh"

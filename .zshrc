@@ -66,3 +66,5 @@ export NVM_DIR="$HOME/.nvm"
 
 # Created by `pipx` on 2025-07-09 21:10:13
 export PATH="$PATH:/Users/dillon.ellis/.local/bin"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
