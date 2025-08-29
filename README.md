@@ -12,14 +12,14 @@ This repository contains my dotfiles managed as a bare Git repository for deploy
 - CLI tools: fzf, ripgrep, bat, fd, yazi
 - Development tools: Git, Docker, Terraform, Node.js, Python, Go
 - Terminal setup with Ghostty and Nerd Fonts
-- CLI tool for ghostty background opacity. See .local/bin/gt
+- CLI tool for ghostty background opacity/blur. See .local/bin/gt
 
 ## Quick Setup
 
 ### One-Line Install
 
 ```bash
-curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/scripts/setup-dotfiles.sh | bash
+curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash
 ```
 
 ### Manual Installation
@@ -53,7 +53,7 @@ curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/scripts/s
 5. **Install packages**
 
    ```bash
-   chmod +x ~/scripts/install-brew.sh
+   chmod +x ~/.local/bin/install-brew.sh
    ~/scripts/install-brew.sh
    ```
 
