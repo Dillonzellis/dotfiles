@@ -1,4 +1,5 @@
 theme = carbonfox
 font-size = 15
-background-opacity = 0.95
+background-opacity = 0.85
 font-family = "0xProto Nerd Font"
+background-blur = 10
