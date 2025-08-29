@@ -93,7 +93,7 @@ cask "font-jetbrains-mono-nerd-font"
 brew "mas"                        
 brew "mackup"                     
 brew "smudge/smudge/nightlight"   
-brew "flux"
+cask "flux-app"
 
 # ==============================================================================
 # GUI APPLICATIONS - DEVELOPMENT
