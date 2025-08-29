@@ -24,7 +24,6 @@ alias desk="cd ~/Desktop"
 
 alias ns="npx fusion start"
 
-
 config() {
     # Check if user is trying to add current directory
     if [[ "$1" == "add" && "$2" == "." ]]; then
@@ -54,6 +53,9 @@ config() {
 
 export EDITOR=nvim
 
+# Add local bin to PATH (portable across users)
+export PATH="$HOME/.local/bin:$PATH"
+
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -62,9 +64,5 @@ export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-
-# Created by `pipx` on 2025-07-09 21:10:13
-export PATH="$PATH:/Users/dillon.ellis/.local/bin"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
