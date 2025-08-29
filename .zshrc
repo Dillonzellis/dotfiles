@@ -13,6 +13,10 @@ alias vi="nvim"
 
 alias gs="git status"
 alias zshrc="nvim ~/.zshrc"
+
+alias nl="nightlight toggle"
+alias nld="nightlight temp 50"
+alias nln="nightlight temp 100"
 	
 alias ajc="cd ~/dev/arc-fusion-ajc"
 alias dawg="cd ~/dev/arc-fusion-dawgnation/"
