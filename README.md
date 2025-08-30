@@ -33,6 +33,24 @@ The script will:
 - Set up your Git config (it'll ask for your username/email)
 - Configure your shell
 
+### Wallpaper options
+
+By default, wallpapers are excluded from the setup to keep downloads fast. You can include them with:
+
+```bash
+# Get prompted with wallpaper size and file count
+curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash -s -- --wallpapers
+
+# Force download without prompting (if you know you want them)
+curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash -s -- --force-wallpapers
+```
+
+If you skip wallpapers initially, you can always add them later:
+
+```bash
+config checkout -- .local/share/wallpapers/
+```
+
 ## Manual install
 
 1. **Clone as bare repo**
@@ -127,11 +145,6 @@ Make sure the script is executable:
 ```bash
 chmod +x ~/.local/bin/tmux-session-dispensary.sh
 ```
-
-## Requirements
-
-- macOS (tested on Monterey and newer)
-- That's pretty much it - the setup script handles everything else
 
 ## Notes
 

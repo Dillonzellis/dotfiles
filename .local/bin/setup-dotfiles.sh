@@ -32,6 +32,37 @@ print_error() {
 echo "Starting complete dotfiles setup..."
 echo "======================================"
 
+# Check for command line arguments
+INCLUDE_WALLPAPERS=false
+FORCE_WALLPAPERS=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  --wallpapers)
+    INCLUDE_WALLPAPERS=true
+    shift
+    ;;
+  --force-wallpapers)
+    FORCE_WALLPAPERS=true
+    INCLUDE_WALLPAPERS=true
+    shift
+    ;;
+  --help)
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  --wallpapers        Check wallpaper size and prompt for inclusion"
+    echo "  --force-wallpapers  Force wallpapers download without prompting"
+    echo "  --help              Show this help message"
+    exit 0
+    ;;
+  *)
+    print_warning "Unknown option: $1"
+    shift
+    ;;
+  esac
+done
+
 # Check if running on macOS
 if [[ "$OSTYPE" != "darwin"* ]]; then
   print_error "This script is designed for macOS only"
@@ -57,12 +88,90 @@ function config {
 }
 
 # ==============================================================================
+# WALLPAPER HANDLING SETUP
+# ==============================================================================
+setup_sparse_checkout() {
+  print_status "Setting up sparse checkout configuration..."
+
+  # Enable sparse checkout
+  config config core.sparseCheckout true
+
+  # Create sparse-checkout file
+  sparse_checkout_file="$HOME/.dotfiles/info/sparse-checkout"
+  mkdir -p "$(dirname "$sparse_checkout_file")"
+
+  # Base patterns (always included)
+  cat >"$sparse_checkout_file" <<'EOF'
+# Always include these patterns
+/*
+!.local/share/wallpapers/
+EOF
+
+  if [ "$INCLUDE_WALLPAPERS" = true ]; then
+    echo ".local/share/wallpapers/" >>"$sparse_checkout_file"
+    print_status "Wallpapers will be included in checkout"
+  else
+    print_status "Wallpapers will be excluded from checkout"
+  fi
+}
+
+# ==============================================================================
+# WALLPAPER SIZE CHECK AND PROMPT
+# ==============================================================================
+check_and_prompt_wallpapers() {
+  if [ "$INCLUDE_WALLPAPERS" = true ] && [ "$FORCE_WALLPAPERS" = false ]; then
+    print_status "Checking wallpaper directory size..."
+
+    # Use GitHub API to check directory size (rough estimate)
+    wallpaper_info=$(curl -s "https://api.github.com/repos/Dillonzellis/dotfiles/contents/.local/share/wallpapers" 2>/dev/null || echo "[]")
+
+    if command -v jq >/dev/null 2>&1; then
+      total_size=$(echo "$wallpaper_info" | jq '[.[] | .size] | add' 2>/dev/null || echo "0")
+      file_count=$(echo "$wallpaper_info" | jq 'length' 2>/dev/null || echo "0")
+    else
+      # Fallback without jq - rough estimate
+      total_size=$(echo "$wallpaper_info" | grep -o '"size":[0-9]*' | cut -d: -f2 | awk '{sum += $1} END {print sum}')
+      file_count=$(echo "$wallpaper_info" | grep -c '"name"' || echo "0")
+    fi
+
+    if [ "$total_size" -gt 0 ]; then
+      size_mb=$((total_size / 1024 / 1024))
+      echo
+      print_status "📊 Wallpaper Directory Information:"
+      echo "   Files: $file_count wallpapers"
+      echo "   Size:  ~${size_mb}MB"
+      echo
+
+      # Always prompt when --wallpapers is used (unless --force-wallpapers)
+      echo -n "Download wallpapers? (y/N): "
+      read -r response
+      if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        print_status "Skipping wallpapers. You can add them later with: config checkout -- .local/share/wallpapers/"
+        INCLUDE_WALLPAPERS=false
+      else
+        print_success "Wallpapers will be downloaded"
+      fi
+    else
+      print_warning "Could not determine wallpaper directory size. Proceeding with download."
+    fi
+  elif [ "$FORCE_WALLPAPERS" = true ]; then
+    print_status "Force downloading wallpapers (--force-wallpapers used)"
+  fi
+}
+
+# ==============================================================================
 # STEP 2: BACKUP EXISTING FILES
 # ==============================================================================
-print_status "Step 2: Backing up existing dotfiles"
+print_status "Step 2: Setting up file checkout strategy"
 
 backup_dir="$HOME/.config-backup-$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$backup_dir"
+
+# Check wallpaper size and prompt user if --wallpapers was used
+check_and_prompt_wallpapers
+
+# Set up sparse checkout after user decision
+setup_sparse_checkout
 
 print_status "Checking out dotfiles..."
 if ! config checkout 2>/dev/null; then
@@ -70,6 +179,11 @@ if ! config checkout 2>/dev/null; then
 
   # Get list of conflicting files and back them up properly
   config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | while read file; do
+    # Skip wallpaper conflicts if we're not including them
+    if [ "$INCLUDE_WALLPAPERS" = false ] && [[ "$file" == .local/share/wallpapers/* ]]; then
+      continue
+    fi
+
     # Create parent directory in backup location
     mkdir -p "$backup_dir/$(dirname "$file")"
     # Move the file
@@ -83,9 +197,18 @@ if ! config checkout 2>/dev/null; then
   config checkout
 fi
 
+# Apply sparse checkout settings
+config read-tree -m -u HEAD
+
 # Configure the repository
 config config --local status.showUntrackedFiles no
 print_success "Dotfiles checked out successfully"
+
+if [ "$INCLUDE_WALLPAPERS" = true ]; then
+  print_success "Wallpapers included in checkout"
+else
+  print_status "Wallpapers excluded. Add later with: config checkout -- .local/share/wallpapers/"
+fi
 
 # ==============================================================================
 # STEP 3: INSTALL HOMEBREW & PACKAGES
@@ -184,7 +307,7 @@ setup_git_config() {
 setup_git_config
 
 # ==============================================================================
-# STEP 6: MACOS SYSTEM PREFERENCES (OPTIONAL)
+# STEP 7: MACOS SYSTEM PREFERENCES (OPTIONAL)
 # ==============================================================================
 if [ -f "$HOME/.macos" ]; then
   read -p "Run macOS system preferences script? (y/N): " -n 1 -r
@@ -202,10 +325,16 @@ fi
 print_success "Dotfiles setup complete!"
 echo
 print_status "What was installed:"
-echo "   Dotfiles cloned and checked out"
-echo "   Homebrew packages installed"
-echo "   Shell configured"
-echo "   Application settings applied"
+echo "   ✓ Dotfiles cloned and checked out"
+echo "   ✓ Homebrew packages installed"
+echo "   ✓ Shell configured"
+echo "   ✓ Application settings applied"
+
+if [ "$INCLUDE_WALLPAPERS" = true ]; then
+  echo "   ✓ Wallpapers included"
+else
+  echo "   - Wallpapers excluded (add with: config checkout -- .local/share/wallpapers/)"
+fi
 
 if [ -d "$backup_dir" ] && [ "$(ls -A $backup_dir 2>/dev/null)" ]; then
   print_warning "Original dotfiles backed up to: $backup_dir"
@@ -219,10 +348,14 @@ echo "  3. Customize as needed"
 
 echo
 print_status "Useful commands:"
-echo "  config status    # Check dotfiles git status"
-echo "  config add .     # Add changes"
-echo "  config commit    # Commit changes"
-echo "  config push      # Push to GitHub"
+echo "  config status                              # Check dotfiles git status"
+echo "  config add .zshrc .tmux.conf               # Add specific changes"
+echo "  config commit -m 'Update config'          # Commit changes"
+echo "  config push                                # Push to GitHub"
+
+if [ "$INCLUDE_WALLPAPERS" = false ]; then
+  echo "  config checkout -- .local/share/wallpapers/  # Add wallpapers later"
+fi
 
 echo
-print_status "Enjoy your new development environment"
+print_status "Everything is set up you are good to go."
