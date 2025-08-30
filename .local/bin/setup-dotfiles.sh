@@ -206,6 +206,26 @@ print_success "Dotfiles checked out successfully"
 
 if [ "$INCLUDE_WALLPAPERS" = true ]; then
   print_success "Wallpapers included in checkout"
+
+  # Copy wallpapers to ~/Pictures/wallpapers
+  if [ -d "$HOME/.local/share/wallpapers" ]; then
+    print_status "Copying wallpapers to ~/Pictures/wallpapers..."
+
+    # If ~/Pictures/wallpapers exists, back it up first
+    if [ -d "$HOME/Pictures/wallpapers" ]; then
+      print_warning "~/Pictures/wallpapers already exists, backing up to ~/Pictures/wallpapers_backup"
+      mv "$HOME/Pictures/wallpapers" "$HOME/Pictures/wallpapers_backup"
+    fi
+
+    # Create Pictures directory if it doesn't exist
+    mkdir -p "$HOME/Pictures"
+
+    # Copy wallpapers
+    cp -r "$HOME/.local/share/wallpapers" "$HOME/Pictures/"
+    print_success "Wallpapers copied to ~/Pictures/wallpapers"
+  else
+    print_warning "Wallpapers directory not found in dotfiles"
+  fi
 else
   print_status "Wallpapers excluded. Add later with: config checkout -- .local/share/wallpapers/"
 fi
@@ -331,7 +351,7 @@ echo "   ✓ Shell configured"
 echo "   ✓ Application settings applied"
 
 if [ "$INCLUDE_WALLPAPERS" = true ]; then
-  echo "   ✓ Wallpapers included"
+  echo "   ✓ Wallpapers included and copied to ~/Pictures/wallpapers"
 else
   echo "   - Wallpapers excluded (add with: config checkout -- .local/share/wallpapers/)"
 fi
@@ -353,9 +373,10 @@ echo "  config add .zshrc .tmux.conf               # Add specific changes"
 echo "  config commit -m 'Update config'          # Commit changes"
 echo "  config push                                # Push to GitHub"
 
+# Only show wallpaper command if wallpapers were not included
 if [ "$INCLUDE_WALLPAPERS" = false ]; then
   echo "  config checkout -- .local/share/wallpapers/  # Add wallpapers later"
 fi
 
 echo
-print_status "Everything is set up you are good to go."
+print_status "Enjoy your new development environment! 🚀"

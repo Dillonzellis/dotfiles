@@ -45,6 +45,8 @@ curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bi
 curl -L https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/.local/bin/setup-dotfiles.sh | bash -s -- --force-wallpapers
 ```
 
+When wallpapers are included, they'll be automatically copied to `~/Pictures/wallpapers` for easy access. If you already have a wallpapers folder there, it'll be backed up as `wallpapers_backup` first.
+
 If you skip wallpapers initially, you can always add them later:
 
 ```bash
@@ -145,8 +147,6 @@ Make sure the script is executable:
 ```bash
 chmod +x ~/.local/bin/tmux-session-dispensary.sh
 ```
-
-## Notes
 
 This setup assumes you're using Ghostty as your terminal and have a Nerd Font installed. If you use a different terminal, you might need to tweak some configs. The Brewfile installs fonts automatically, so you should be covered.
 
