@@ -150,4 +150,4 @@ chmod +x ~/.local/bin/tmux-session-dispensary.sh
 
 This setup assumes you're using Ghostty as your terminal and have a Nerd Font installed. If you use a different terminal, you might need to tweak some configs. The Brewfile installs fonts automatically, so you should be covered.
 
-Feel free to fork this and make it your own and let me know you find it useful or have suggestions.
+Feel free to fork this and make it your own and let me know if you find it useful or have suggestions.
