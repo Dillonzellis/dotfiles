@@ -153,9 +153,7 @@ fi
 # ==============================================================================
 # STEP 6: SET UP GIT CONFIG
 # ==============================================================================
-
 setup_git_config() {
-
   print_status "Step 6: Setting up git config from gitconfig template"
   print_status "Setting up Git configuration..."
 
@@ -168,12 +166,11 @@ setup_git_config() {
     # Default to GitHub noreply format if no email provided
     if [ -z "$git_email" ]; then
       print_status "Getting GitHub user ID for noreply email..."
-      # You could fetch this from GitHub API if needed
       git_email="${git_username}@users.noreply.github.com"
     fi
 
     # Create actual .gitconfig from template
-    sed "s/YOUR_USERNAME/$git_username/g; s/YOUR_EMAIL@users.noreply.github.com/$git_email/g" \
+    sed "s/yourname/$git_username/g; s/youremail@example.com/$git_email/g" \
       "$HOME/.gitconfig.template" >"$HOME/.gitconfig"
 
     print_success "Git configuration created with:"
@@ -183,6 +180,8 @@ setup_git_config() {
     print_status "Git configuration already exists or template not found"
   fi
 }
+
+setup_git_config
 
 # ==============================================================================
 # STEP 6: MACOS SYSTEM PREFERENCES (OPTIONAL)
