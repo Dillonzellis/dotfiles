@@ -17,6 +17,7 @@ alias zshrc="nvim ~/.zshrc"
 alias nl="nightlight toggle"
 alias nld="nightlight temp 50"
 alias nln="nightlight temp 100"
+alias nls="nightlight status && nightlight temp"
 	
 alias ajc="cd ~/dev/arc-fusion-ajc"
 alias dawg="cd ~/dev/arc-fusion-dawgnation/"
