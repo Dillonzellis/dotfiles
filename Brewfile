@@ -58,6 +58,7 @@ brew "gzip"
 # PROGRAMMING LANGUAGES & RUNTIMES
 # ==============================================================================
 brew "node"                       
+brew "nvm"
 # brew "python@3.12"                
 # brew "pipx"                       
 # brew "go"                         
@@ -99,6 +100,7 @@ cask "flux-app"
 # GUI APPLICATIONS - DEVELOPMENT
 # ==============================================================================
 cask "ghostty"                    
+cask "figma"
 # cask "orbstack"                   
 # cask "visual-studio-code"         
 # cask "docker"                     
