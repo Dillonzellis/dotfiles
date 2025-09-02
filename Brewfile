@@ -20,6 +20,12 @@ brew "tmux"
 brew "curl"                       
 brew "wget"                       
 
+brew "lua-language-server"
+brew "typescript-language-server"  
+brew "bash-language-server"
+brew "vscode-langservers-extracted"
+
+
 # ==============================================================================
 # SHELL & PRODUCTIVITY TOOLS
 # ==============================================================================
