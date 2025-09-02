@@ -56,6 +56,16 @@ config() {
     /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME "$@"
 }
 
+gc() {
+    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    if [[ "$branch" == *"/"* ]]; then
+        prefix=$(echo "$branch" | sed 's/\/.*//')
+        git commit -m "$prefix/$*-Dillon"
+    else
+        git commit -m "$*-Dillon"
+    fi
+}
+
 export EDITOR=nvim
 
 # Add local bin to PATH (portable across users)
