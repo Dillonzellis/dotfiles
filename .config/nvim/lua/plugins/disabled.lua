@@ -1,7 +1,7 @@
 return {
   -- disable default plugins
   { "echasnovski/mini.pairs", enabled = false },
-  -- { "akinsho/bufferline.nvim", enabled = false },
+  { "akinsho/bufferline.nvim", enabled = false },
   -- { "goolord/alpha-nvim", enabled = false },
   -- { "folke/todo-comments.nvim", enabled = false },
   -- { "nvim-lualine/lualine.nvim", enabled = false },
