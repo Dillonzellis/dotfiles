@@ -1,5 +1,8 @@
 theme = carbonfox
 font-size = 15
-background-opacity = 0.85
+background-opacity = .85
 font-family = "0xProto Nerd Font"
-background-blur = 10
+background-blur = 15
+
+title = " "
+clipboard-trim-trailing-spaces = true
