@@ -1,0 +1,18 @@
+[user]
+	email = 31318165+Dillonzellis@users.noreply.github.com
+	name = dillonzellis
+[init]
+	defaultBranch = master
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[rerere]
+	enabled = false
+[push]
+	autoSetupRemote = true
+[diff]
+	algorithm = patience
+[core]
+	editor = nvim

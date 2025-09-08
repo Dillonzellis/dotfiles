@@ -1,0 +1,412 @@
+#!/bin/bash
+
+# gt - Ghostty opacity and blur management CLI
+# A CLI tool for managing Ghostty background opacity and blur
+
+CONFIG_FILE="$HOME/.config/ghostty/config"
+SCRIPT_NAME="$(basename "$0")"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+print_usage() {
+  echo "Usage: $SCRIPT_NAME [COMMAND|VALUE] [OPTIONS]"
+  echo ""
+  echo "Opacity Commands:"
+  echo "  toggle, t           Toggle between transparent (0.95) and opaque (1.0)"
+  echo "  opacity VALUE       Set opacity to specific value (0.0-1.0)"
+  echo "  show, s             Show current opacity and blur values"
+  echo ""
+  echo "Blur Commands:"
+  echo "  blur VALUE          Set background blur radius (integer, 'true', or 'false')"
+  echo "                      Note: Values above 20 may cause performance issues"
+  echo "  blur-toggle, bt     Toggle blur on/off (false or 20)"
+  echo ""
+  echo "Combined Commands:"
+  echo "  preset NAME         Apply predefined opacity+blur combinations"
+  echo "  reset               Reset to defaults (opacity: 0.95, blur: false)"
+  echo ""
+  echo "General:"
+  echo "  help, h, --help     Show this help message"
+  echo ""
+  echo "Set opacity directly:"
+  echo "  VALUE               Set opacity to specific value (0.0-1.0)"
+  echo ""
+  echo "Examples:"
+  echo "  $SCRIPT_NAME              # Toggle opacity"
+  echo "  $SCRIPT_NAME 0.8          # Set to 80% opacity"
+  echo "  $SCRIPT_NAME blur 25      # Set blur radius to 25"
+  echo "  $SCRIPT_NAME blur true    # Enable default blur (20)"
+  echo "  $SCRIPT_NAME blur false   # Disable blur"
+  echo "  $SCRIPT_NAME bt           # Toggle blur on/off"
+  echo "  $SCRIPT_NAME preset glass # Apply glass preset"
+  echo "  $SCRIPT_NAME show         # Show current settings"
+  echo ""
+  echo "Opacity Presets:"
+  echo "  transparent, trans    Set to 0.8 (80%)"
+  echo "  semi, medium         Set to 0.9 (90%)"
+  echo "  opaque, solid        Set to 1.0 (100%)"
+  echo ""
+  echo "Combined Presets:"
+  echo "  glass               Opacity: 0.85, Blur: 20 (frosted glass effect)"
+  echo "  subtle              Opacity: 0.95, Blur: 10 (subtle blur)"
+  echo "  strong              Opacity: 0.75, Blur: 18 (strong transparency with blur)"
+  echo "  minimal             Opacity: 0.9, Blur: 5 (minimal blur)"
+  echo "  clear               Opacity: 1.0, Blur: false (no transparency/blur)"
+}
+
+print_error() {
+  echo -e "${RED}Error:${NC} $1" >&2
+}
+
+print_success() {
+  echo -e "${GREEN}✓${NC} $1"
+}
+
+print_info() {
+  echo -e "${BLUE}ℹ${NC} $1"
+}
+
+print_warning() {
+  echo -e "${YELLOW}⚠${NC} $1"
+}
+
+get_current_opacity() {
+  local opacity
+  opacity=$(grep "^background-opacity" "$CONFIG_FILE" 2>/dev/null | sed 's/.*=\s*\(.*\)/\1/' | xargs)
+
+  if [ -z "$opacity" ]; then
+    echo "1.0"
+  else
+    echo "$opacity"
+  fi
+}
+
+get_current_blur() {
+  local blur
+  blur=$(grep "^background-blur" "$CONFIG_FILE" 2>/dev/null | sed 's/.*=\s*\(.*\)/\1/' | xargs)
+
+  if [ -z "$blur" ]; then
+    echo "false"
+  else
+    echo "$blur"
+  fi
+}
+
+validate_opacity() {
+  local value="$1"
+  # Check if it's a valid number between 0 and 1
+  if ! [[ "$value" =~ ^0*(\.[0-9]+)?$|^1(\.0*)?$ ]] || [ "$(echo "$value > 1" | bc -l 2>/dev/null)" = "1" ]; then
+    return 1
+  fi
+  return 0
+}
+
+validate_blur() {
+  local value="$1"
+  # Accept true, false, or positive integers
+  if [[ "$value" == "true" ]] || [[ "$value" == "false" ]]; then
+    return 0
+  elif [[ "$value" =~ ^[0-9]+$ ]] && [ "$value" -ge 0 ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+check_blur_warning() {
+  local value="$1"
+  # Warn if blur value is above 20 (recommended maximum)
+  if [[ "$value" =~ ^[0-9]+$ ]] && [ "$value" -gt 20 ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+update_config_value() {
+  local key="$1"
+  local value="$2"
+  local temp_file
+  temp_file=$(mktemp)
+
+  # Ensure config file exists
+  if [ ! -f "$CONFIG_FILE" ]; then
+    mkdir -p "$(dirname "$CONFIG_FILE")"
+    touch "$CONFIG_FILE"
+  fi
+
+  if grep -q "^$key" "$CONFIG_FILE" 2>/dev/null; then
+    # Replace existing line
+    sed "s/^$key.*$/$key = $value/" "$CONFIG_FILE" >"$temp_file"
+  else
+    # Add new line to existing config
+    cp "$CONFIG_FILE" "$temp_file"
+    echo "$key = $value" >>"$temp_file"
+  fi
+
+  # Move temp file back to config
+  mv "$temp_file" "$CONFIG_FILE"
+}
+
+remove_config_value() {
+  local key="$1"
+  local temp_file
+  temp_file=$(mktemp)
+
+  if [ -f "$CONFIG_FILE" ] && grep -q "^$key" "$CONFIG_FILE" 2>/dev/null; then
+    # Remove the line
+    grep -v "^$key" "$CONFIG_FILE" >"$temp_file"
+    mv "$temp_file" "$CONFIG_FILE"
+  else
+    rm -f "$temp_file"
+  fi
+}
+
+set_opacity() {
+  local new_opacity="$1"
+  update_config_value "background-opacity" "$new_opacity"
+}
+
+set_blur() {
+  local new_blur="$1"
+  if [ "$new_blur" = "false" ]; then
+    # Remove blur configuration to use default (false)
+    remove_config_value "background-blur"
+  else
+    update_config_value "background-blur" "$new_blur"
+  fi
+}
+
+reload_ghostty() {
+  # Send SIGUSR1 to reload configuration
+  if pgrep ghostty >/dev/null 2>&1; then
+    pkill -SIGUSR1 ghostty 2>/dev/null && print_info "Sent reload signal to Ghostty" || print_warning "Failed to send reload signal"
+  else
+    print_warning "Changes will apply on next start or reload with cmd+shift+,"
+  fi
+}
+
+format_blur_display() {
+  local blur="$1"
+  if [ "$blur" = "false" ]; then
+    echo "disabled"
+  elif [ "$blur" = "true" ]; then
+    echo "enabled (default: 20)"
+  else
+    echo "$blur"
+  fi
+}
+
+show_current_settings() {
+  local current_opacity current_blur opacity_percentage blur_display
+  current_opacity=$(get_current_opacity)
+  current_blur=$(get_current_blur)
+  opacity_percentage=$(echo "$current_opacity * 100" | bc -l | cut -d. -f1)
+  blur_display=$(format_blur_display "$current_blur")
+
+  echo -e "${BLUE}Current Settings:${NC}"
+  echo "  Opacity: $current_opacity (${opacity_percentage}%)"
+  echo "  Blur: $blur_display"
+
+  # Suggest preset if close to known values
+  if [ "$current_opacity" = "0.85" ] && [ "$current_blur" = "20" ]; then
+    echo -e "  ${GREEN}→ Matches 'glass' preset${NC}"
+  elif [ "$current_opacity" = "0.95" ] && [ "$current_blur" = "10" ]; then
+    echo -e "  ${GREEN}→ Matches 'subtle' preset${NC}"
+  elif [ "$current_opacity" = "0.75" ] && [ "$current_blur" = "18" ]; then
+    echo -e "  ${GREEN}→ Matches 'strong' preset${NC}"
+  elif [ "$current_opacity" = "0.9" ] && [ "$current_blur" = "5" ]; then
+    echo -e "  ${GREEN}→ Matches 'minimal' preset${NC}"
+  elif [ "$current_opacity" = "1.0" ] && [ "$current_blur" = "false" ]; then
+    echo -e "  ${GREEN}→ Matches 'clear' preset${NC}"
+  fi
+}
+
+apply_preset() {
+  local preset="$1"
+  case "$preset" in
+  "glass")
+    set_opacity "0.85"
+    set_blur "20"
+    print_success "Applied 'glass' preset (opacity: 0.85, blur: 20)"
+    ;;
+  "subtle")
+    set_opacity "0.95"
+    set_blur "10"
+    print_success "Applied 'subtle' preset (opacity: 0.95, blur: 10)"
+    ;;
+  "strong")
+    set_opacity "0.75"
+    set_blur "18"
+    print_success "Applied 'strong' preset (opacity: 0.75, blur: 18)"
+    ;;
+  "minimal")
+    set_opacity "0.9"
+    set_blur "5"
+    print_success "Applied 'minimal' preset (opacity: 0.9, blur: 5)"
+    ;;
+  "clear")
+    set_opacity "1.0"
+    set_blur "false"
+    print_success "Applied 'clear' preset (opacity: 1.0, blur: disabled)"
+    ;;
+  *)
+    print_error "Unknown preset: '$preset'"
+    echo "Available presets: glass, subtle, strong, minimal, clear"
+    exit 1
+    ;;
+  esac
+}
+
+# Check if config file directory exists
+if [ ! -f "$CONFIG_FILE" ] && [ ! -d "$(dirname "$CONFIG_FILE")" ]; then
+  print_info "Creating Ghostty config directory: $(dirname "$CONFIG_FILE")"
+  mkdir -p "$(dirname "$CONFIG_FILE")"
+fi
+
+# Parse arguments
+case "${1:-toggle}" in
+"help" | "h" | "--help" | "-h")
+  print_usage
+  exit 0
+  ;;
+"show" | "s")
+  show_current_settings
+  exit 0
+  ;;
+"toggle" | "t" | "")
+  current=$(get_current_opacity)
+  if [ "$current" = "1" ] || [ "$current" = "1.0" ]; then
+    new_opacity="0.95"
+    print_success "Toggled opacity: opaque → transparent (${new_opacity})"
+  else
+    new_opacity="1.0"
+    print_success "Toggled opacity: transparent → opaque (${new_opacity})"
+  fi
+  set_opacity "$new_opacity"
+  reload_ghostty
+  ;;
+"opacity")
+  if [ -z "$2" ]; then
+    print_error "Opacity value required"
+    echo "Usage: $SCRIPT_NAME opacity VALUE"
+    exit 1
+  fi
+  if validate_opacity "$2"; then
+    current=$(get_current_opacity)
+    percentage=$(echo "$2 * 100" | bc -l | cut -d. -f1)
+    print_success "Opacity: $current → $2 (${percentage}%)"
+    set_opacity "$2"
+    reload_ghostty
+  else
+    print_error "Invalid opacity value: '$2'"
+    echo "Opacity must be between 0.0 and 1.0"
+    exit 1
+  fi
+  ;;
+"blur")
+  if [ -z "$2" ]; then
+    print_error "Blur value required"
+    echo "Usage: $SCRIPT_NAME blur VALUE"
+    echo "VALUE can be: true, false, or a non-negative integer"
+    echo "Note: Values above 20 may cause performance issues"
+    exit 1
+  fi
+  if validate_blur "$2"; then
+    current=$(get_current_blur)
+    current_display=$(format_blur_display "$current")
+    new_display=$(format_blur_display "$2")
+
+    # Check for values above recommended maximum
+    if check_blur_warning "$2"; then
+      print_warning "Blur value $2 is above the recommended maximum of 20"
+      print_warning "Higher values may cause rendering issues and poor performance"
+      echo -n "Continue anyway? (y/N): "
+      read -r response
+      if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        echo "Operation cancelled"
+        exit 0
+      fi
+    fi
+
+    print_success "Blur: $current_display → $new_display"
+    set_blur "$2"
+    reload_ghostty
+  else
+    print_error "Invalid blur value: '$2'"
+    echo "Blur value must be 'true', 'false', or a non-negative integer"
+    echo "Note: Values above 20 may cause performance issues"
+    exit 1
+  fi
+  ;;
+"blur-toggle" | "bt")
+  current=$(get_current_blur)
+  if [ "$current" = "false" ]; then
+    new_blur="20"
+    print_success "Toggled blur: disabled → enabled (${new_blur})"
+  else
+    new_blur="false"
+    print_success "Toggled blur: enabled → disabled"
+  fi
+  set_blur "$new_blur"
+  reload_ghostty
+  ;;
+"preset")
+  if [ -z "$2" ]; then
+    print_error "Preset name required"
+    echo "Usage: $SCRIPT_NAME preset NAME"
+    echo "Available presets: glass, subtle, strong, minimal, clear"
+    exit 1
+  fi
+  # Check if preset uses high blur values and warn accordingly
+  case "$2" in
+  # All presets now use blur ≤20, so no warnings needed
+  *) ;;
+  esac
+  apply_preset "$2"
+  reload_ghostty
+  ;;
+"reset")
+  set_opacity "0.95"
+  set_blur "false"
+  print_success "Reset to defaults (opacity: 0.95, blur: disabled)"
+  reload_ghostty
+  ;;
+"transparent" | "trans")
+  new_opacity="0.8"
+  print_success "Set to transparent preset (${new_opacity})"
+  set_opacity "$new_opacity"
+  reload_ghostty
+  ;;
+"semi" | "medium")
+  new_opacity="0.9"
+  print_success "Set to semi-transparent preset (${new_opacity})"
+  set_opacity "$new_opacity"
+  reload_ghostty
+  ;;
+"opaque" | "solid")
+  new_opacity="1.0"
+  print_success "Set to opaque preset (${new_opacity})"
+  set_opacity "$new_opacity"
+  reload_ghostty
+  ;;
+*)
+  # Try to parse as numeric opacity value
+  if validate_opacity "$1"; then
+    current=$(get_current_opacity)
+    percentage=$(echo "$1 * 100" | bc -l | cut -d. -f1)
+    print_success "Opacity: $current → $1 (${percentage}%)"
+    set_opacity "$1"
+    reload_ghostty
+  else
+    print_error "Invalid command or opacity value: '$1'"
+    echo "Run '$SCRIPT_NAME help' for usage information"
+    exit 1
+  fi
+  ;;
+esac
