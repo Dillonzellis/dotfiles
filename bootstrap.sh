@@ -266,7 +266,7 @@ if [ -t 0 ]; then
   echo "This script will:"
   echo "  • Install Homebrew (if not present)"
   echo "  • Install Git (if not present)"
-  echo "  • Clone your dotfiles repository to ~/.dotfiles"
+  echo "  • Clone your dotfiles repository to ~/dotfiles"
   echo "  • Create symlinks for all configuration files"
   echo "  • Install Homebrew packages from Brewfile"
   echo "  • Set zsh as your default shell"
