@@ -1,4 +1,5 @@
 plugins=(zsh-autosuggestions zsh-syntax-highlighting)
+setopt CORRECT_ALL
 
 # PROMPT='%F{green}%n%f@%F{blue}%m%f %F{yellow}%~%f %F{red}$%f '
 # PROMPT='%~ '
@@ -10,6 +11,7 @@ alias cl="clear"
 alias ..="cd .."
 alias rf="rm -rf"
 alias vi="nvim"
+alias cat="bat"
 
 alias gs="git status"
 alias zshrc="nvim ~/.zshrc"
