@@ -12,6 +12,7 @@ alias ..="cd .."
 alias rf="rm -rf"
 alias vi="nvim"
 alias cat="bat"
+alias df="dysk"
 
 alias gs="git status"
 alias zshrc="nvim ~/.zshrc"
