@@ -1,10 +1,6 @@
 plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 setopt CORRECT_ALL
 
-# PROMPT='%F{green}%n%f@%F{blue}%m%f %F{yellow}%~%f %F{red}$%f '
-# PROMPT='%~ '
-# PROMPT='%F{#008000}%~ %f% '
-# PROMPT='%F{#008080}%~ %f% '
 PROMPT='%F{#b5fd89}%~ %f% '
 
 alias cl="clear"
