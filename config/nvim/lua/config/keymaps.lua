@@ -3,6 +3,10 @@ vim.g.maplocalleader = "\\"
 
 vim.keymap.set("n", "Q", "<nop>")
 
+vim.keymap.set("n", "<leader>w", ":set wrap!<CR>", { desc = "Toggle Wrap" })
+vim.keymap.set("n", "<leader>ln", ":set relativenumber!<CR>", { desc = "Toggle Relative Number" })
+vim.keymap.set("n", "<leader>l", ":set Lazy<CR>", { desc = "Show Lazy Menu" })
+
 vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = "Toggle Diagnostics" })
