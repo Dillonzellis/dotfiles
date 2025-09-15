@@ -3,5 +3,10 @@ return {
 	main = "ibl",
 	---@module "ibl"
 	---@type ibl.config
-	opts = {},
+	opts = {
+		enabled = false,
+	},
+	keys = {
+		{ "<leader>i", "<cmd>IBLToggle<cr>", desc = "Indent Lines Toggle" },
+	},
 }
