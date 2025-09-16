@@ -183,12 +183,7 @@ set_blur() {
 }
 
 reload_ghostty() {
-  # Send SIGUSR1 to reload configuration
-  if pgrep ghostty >/dev/null 2>&1; then
-    pkill -SIGUSR1 ghostty 2>/dev/null && print_info "Sent reload signal to Ghostty" || print_warning "Failed to send reload signal"
-  else
-    print_warning "Changes will apply on next start or reload with cmd+shift+,"
-  fi
+  print_warning "Changes will apply on next start or reload with cmd+shift+,"
 }
 
 format_blur_display() {
