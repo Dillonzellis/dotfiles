@@ -16,6 +16,6 @@ return {
 			{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neotree" },
 			{ "<leader>ge", "<cmd>Neotree toggle git_status<cr>", desc = "Toggle Neotree with git status" },
 		},
-		lazy = false, -- neo-tree will lazily load itself
+		lazy = true, -- neo-tree will lazily load itself
 	},
 }
