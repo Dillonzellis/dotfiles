@@ -1,4 +1,5 @@
-plugins=(zsh-autosuggestions zsh-syntax-highlighting)
+# plugins=(zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(zsh-syntax-highlighting)
 setopt CORRECT_ALL
 
 PROMPT='%F{#b5fd89}%~ %f% '
@@ -9,9 +10,9 @@ alias rf="rm -rf"
 alias vi="nvim"
 alias cat="bat"
 alias df="dysk"
+alias ls="eza"
 
 alias gs="git status"
-alias zshrc="nvim ~/.zshrc"
 
 alias nl="nightlight toggle"
 alias nld="nightlight temp 50"
@@ -20,9 +21,7 @@ alias nls="nightlight status && nightlight temp"
 	
 alias ajc="cd ~/dev/arc-fusion-ajc"
 alias dawg="cd ~/dev/arc-fusion-dawgnation/"
-alias prxy="cd ~/dev/ajc-arc-feed-proxy/"
 alias pl="cd ~/dev/ajc-payload/"
-alias lam="cd ~/dev/ajc-arc-headless-services/"
 alias dl="cd ~/dev/dl"
 alias desk="cd ~/Desktop"
 
