@@ -17,7 +17,7 @@
   "mini.extra": { "branch": "main", "commit": "a4ea6fc035906b1e9494f6e249ca387b57e8308f" },
   "mini.icons": { "branch": "main", "commit": "f9a177c11daa7829389b7b6eaaec8b8a5c47052d" },
   "mini.pick": { "branch": "main", "commit": "36635165862b445d91c9ba7ae6d3ac37f50c99bf" },
-  "neo-tree.nvim": { "branch": "v3.x", "commit": "f1deac7ecec88c28a250d890ba7bb35843e69cbd" },
+  "neo-tree.nvim": { "branch": "v3.x", "commit": "ed057048a281b418d5318dd5153f9486daa517a3" },
   "nightfox.nvim": { "branch": "main", "commit": "ba47d4b4c5ec308718641ba7402c143836f35aa9" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
   "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
@@ -32,7 +32,7 @@
   "promise-async": { "branch": "main", "commit": "119e8961014c9bfaf1487bf3c2a393d254f337e2" },
   "tailwindcss-colorizer-cmp.nvim": { "branch": "main", "commit": "3d3cd95e4a4135c250faf83dd5ed61b8e5502b86" },
   "todo-comments.nvim": { "branch": "main", "commit": "304a8d204ee787d2544d8bc23cd38d2f929e7cc5" },
-  "trouble.nvim": { "branch": "main", "commit": "3fb3bd737be8866e5f3a170abc70b4da8b5dd45a" },
+  "trouble.nvim": { "branch": "main", "commit": "f176232e7759c4f8abd923c21e3e5a5c76cd6837" },
   "vim-tmux-navigator": { "branch": "master", "commit": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
 }
