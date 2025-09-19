@@ -2,15 +2,15 @@
 
 # Directories to search
 DIRS=(
-  "$HOME/dev/"
+  "$HOME/wks/"
   "$HOME/dotfiles"
 )
 
 # Fuzzy-pick from the list using `fd` + `sk`
 selected=$(
   {
-    # Get subdirectories from dev (with trailing slash, so it searches inside)
-    fd . "$HOME/dev/" --type=dir --max-depth=1 --full-path --base-directory "$HOME"
+    # Get subdirectories from wks (with trailing slash, so it searches inside)
+    fd . "$HOME/wks/" --type=dir --max-depth=1 --full-path --base-directory "$HOME"
     # Add dotfiles root directory itself (no trailing slash, so just the directory)
     echo "$HOME/dotfiles"
   } |
