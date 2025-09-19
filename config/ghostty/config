@@ -1,6 +1,7 @@
 theme = carbonfox
+theme = Liquid Carbon Transparent
 font-size = 15
-background-opacity = .85
+background-opacity = .9
 font-family = "0xProto Nerd Font"
 background-blur = 0
 
