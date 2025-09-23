@@ -1,6 +1,6 @@
 # plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 plugins=(zsh-syntax-highlighting)
-setopt CORRECT_ALL
+# setopt CORRECT_ALL
 
 PROMPT='%F{#b5fd89}%~ %f% '
 
