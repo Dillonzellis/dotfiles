@@ -11,6 +11,14 @@ vim.keymap.set("n", "<leader>ud", function()
 	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = "Toggle Diagnostics" })
 
+vim.keymap.set(
+	"n",
+	"<leader>bs",
+	"<cmd>:enew | setlocal buftype=nofile bufhidden=hide noswapfile<CR>",
+	{ desc = "Create Scratch Budder" }
+)
+-- :enew | setlocal buftype=nofile bufhidden=hide noswapfile
+
 -- Global LSP keymaps (not buffer-specific)
 vim.keymap.set("n", "<C-s>", ":update<CR>")
 -- vim.keymap.set("n", "<leader>lf", function()
