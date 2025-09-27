@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+
+# ggpick - Git Grep Pick
+# Search commit messages and copy matching commit hashes to clipboard
+# Automatically detects branch prefix if no search term provided
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+SCRIPT_NAME="$(basename "$0")"
+
+print_usage() {
+  echo "Usage: $SCRIPT_NAME [SEARCH_TERM] [OPTIONS]"
+  echo ""
+  echo "Search commit messages and copy matching commit hashes to clipboard."
+  echo "If no search term provided, automatically uses current branch prefix."
+  echo ""
+  echo "Arguments:"
+  echo "  SEARCH_TERM     Text to search for in commit messages"
+  echo "                  If omitted, extracts prefix from current branch"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help      Show this help message"
+  echo "  -v, --verbose   Show additional commit details"
+  echo ""
+  echo "Examples:"
+  echo "  $SCRIPT_NAME                    # Auto-detect from branch (e.g., SPD-71/feature → search 'SPD-71')"
+  echo "  $SCRIPT_NAME \"bug fix\"          # Search for commits containing 'bug fix'"
+  echo "  $SCRIPT_NAME SPD-123            # Search for commits containing 'SPD-123'"
+  echo "  $SCRIPT_NAME -v \"feature\"       # Search with verbose output"
+  echo ""
+  echo "Branch Auto-Detection:"
+  echo "  • Works with branches like: SPD-71/feature-name, TICKET-123/bugfix"
+  echo "  • Extracts prefix before first '/' as search term"
+  echo "  • Fails gracefully on branches without prefixes (main, develop, etc.)"
+  echo ""
+  echo "Output:"
+  echo "  • Copies space-separated commit hashes to clipboard"
+  echo "  • Shows short hash and truncated commit message for verification"
+}
+
+print_error() {
+  echo -e "${RED}Error:${NC} $1" >&2
+}
+
+print_success() {
+  echo -e "${GREEN}✓${NC} $1"
+}
+
+print_info() {
+  echo -e "${BLUE}ℹ${NC} $1"
+}
+
+print_warning() {
+  echo -e "${YELLOW}⚠${NC} $1"
+}
+
+check_git_repo() {
+  if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    print_error "Not in a git repository"
+    exit 1
+  fi
+}
+
+get_branch_prefix() {
+  local branch="$1"
+  if [[ "$branch" == *"/"* ]]; then
+    echo "$branch" | sed 's/\/.*//'
+  else
+    return 1
+  fi
+}
+
+check_clipboard() {
+  if command -v pbcopy >/dev/null 2>&1; then
+    echo "pbcopy"
+  elif command -v xclip >/dev/null 2>&1; then
+    echo "xclip -selection clipboard"
+  elif command -v wl-copy >/dev/null 2>&1; then
+    echo "wl-copy"
+  else
+    print_warning "No clipboard utility found (pbcopy, xclip, wl-copy)"
+    print_info "Hashes will be displayed but not copied to clipboard"
+    return 1
+  fi
+}
+
+main() {
+  local search_term=""
+  local verbose=false
+  local clipboard_cmd=""
+
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+    -h | --help)
+      print_usage
+      exit 0
+      ;;
+    -v | --verbose)
+      verbose=true
+      shift
+      ;;
+    -*)
+      print_error "Unknown option: $1"
+      print_usage
+      exit 1
+      ;;
+    *)
+      if [[ -z "$search_term" ]]; then
+        search_term="$1"
+      else
+        print_error "Multiple search terms not supported"
+        print_usage
+        exit 1
+      fi
+      shift
+      ;;
+    esac
+  done
+
+  if ! clipboard_cmd=$(check_clipboard); then
+    clipboard_cmd=""
+  fi
+
+  if [[ -z "$search_term" ]]; then
+    check_git_repo
+
+    local branch
+    branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+    if [[ -z "$branch" ]]; then
+      print_error "Could not determine current branch"
+      print_usage
+      exit 1
+    fi
+
+    if search_term=$(get_branch_prefix "$branch"); then
+      print_info "No search term provided. Using current branch prefix: '$search_term'"
+    else
+      print_error "Current branch '$branch' has no prefix to extract"
+      print_info "Branch must contain '/' to auto-detect search term (e.g., 'SPD-71/feature')"
+      print_usage
+      exit 1
+    fi
+  else
+    check_git_repo
+  fi
+
+  print_info "Searching for commits matching: '$search_term'"
+
+  local hashes
+  hashes=$(git log --grep="$search_term" --no-merges --format='%H' 2>/dev/null | tr '\n' ' ' | sed 's/ $//')
+
+  if [[ -z "$hashes" ]]; then
+    print_error "No commits found matching: '$search_term'"
+    exit 1
+  fi
+
+  local count
+  count=$(echo "$hashes" | wc -w | tr -d ' ')
+
+  print_success "Found $count commit(s) matching '$search_term'"
+
+  if [[ -n "$clipboard_cmd" ]]; then
+    echo "$hashes" | eval "$clipboard_cmd"
+    print_success "Copied hashes to clipboard"
+  else
+    print_info "Hashes: $hashes"
+  fi
+
+  echo ""
+
+  if [[ "$verbose" == true ]]; then
+    echo "Detailed commit information:"
+    git log --grep="$search_term" --no-merges --format='  %C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %s' --date=short
+  else
+    echo "Commit summary:"
+    echo "$hashes" | tr ' ' '\n' | while read -r hash; do
+      if [[ -n "$hash" ]]; then
+        local short_hash commit_msg truncated_msg
+        short_hash=$(git rev-parse --short "$hash" 2>/dev/null)
+        commit_msg=$(git show -s --format='%s' "$hash" 2>/dev/null)
+        truncated_msg="${commit_msg:0:50}"
+
+        if [[ ${#commit_msg} -gt 50 ]]; then
+          truncated_msg="${truncated_msg}..."
+        fi
+
+        echo "  $short_hash $truncated_msg"
+      fi
+    done
+  fi
+}
+
+main "$@"
