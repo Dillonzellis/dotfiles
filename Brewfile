@@ -35,7 +35,7 @@ brew "eza"
 # brew "jq"                         
 # brew "yq"                         
 # brew "tldr"                       
-# brew "zoxide"                     
+brew "zoxide"                     
 
 brew "p7zip"                       
 brew "unzip"                       
