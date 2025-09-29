@@ -10,7 +10,7 @@ alias rf="rm -rf"
 alias vi="nvim"
 alias cat="bat"
 alias df="dysk"
-alias ls="eza"
+alias ls="eza --icons"
 
 alias gs="git status"
 
