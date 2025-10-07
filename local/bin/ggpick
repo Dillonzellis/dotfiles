@@ -154,7 +154,7 @@ main() {
   print_info "Searching for commits matching: '$search_term'"
 
   local hashes
-  hashes=$(git log --grep="$search_term" --no-merges --format='%H' 2>/dev/null | tr '\n' ' ' | sed 's/ $//')
+  hashes=$(git log --grep="$search_term" --no-merges --format='%H' --reverse 2>/dev/null | tr '\n' ' ' | sed 's/ $//')
 
   if [[ -z "$hashes" ]]; then
     print_error "No commits found matching: '$search_term'"
