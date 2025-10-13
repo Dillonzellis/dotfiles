@@ -104,6 +104,47 @@ end
 local autoformat_enabled = true
 local autoformat_buffer_disabled = {}
 
+local ts_filetypes = {
+        typescript = true,
+        typescriptreact = true,
+        javascript = true,
+        javascriptreact = true,
+}
+
+local function organize_imports(client, bufnr)
+        if not client.supports_method("textDocument/codeAction") then
+                return
+        end
+
+        if not ts_filetypes[vim.bo[bufnr].filetype] then
+                return
+        end
+
+        local params = vim.lsp.util.make_range_params()
+        params.context = { only = { "source.organizeImports" }, diagnostics = {} }
+
+        local result = client.request_sync("textDocument/codeAction", params, 1000, bufnr)
+        if not result or not result.result then
+                return
+        end
+
+        for _, action in ipairs(result.result) do
+                if action.edit then
+                        vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding or "utf-16")
+                elseif action.command then
+                        local command = action.command
+                        if type(command) == "table" then
+                                vim.lsp.buf.execute_command(command)
+                        else
+                                vim.lsp.buf.execute_command({
+                                        command = command,
+                                        arguments = action.arguments,
+                                })
+                        end
+                end
+        end
+end
+
 -- Toggle auto-format globally
 function M.toggle_autoformat_global()
 	autoformat_enabled = not autoformat_enabled
@@ -161,13 +202,14 @@ function M.on_attach(client, bufnr)
 		vim.api.nvim_create_autocmd("BufWritePre", {
 			group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
 			buffer = bufnr,
-			callback = function()
-				if should_format(bufnr) then
-					vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
-				end
-			end,
-		})
-	end
+                        callback = function()
+                                if should_format(bufnr) then
+                                        organize_imports(client, bufnr)
+                                        vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
+                                end
+                        end,
+                })
+        end
 end
 
 -- Setup floating window handlers
