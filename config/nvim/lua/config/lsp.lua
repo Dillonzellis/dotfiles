@@ -168,6 +168,25 @@ function M.on_attach(client, bufnr)
 			end,
 		})
 	end
+
+	-- ⭐ NEW: Run ESLint code actions on save for JS/TS files
+	local ft = vim.bo[bufnr].filetype
+	if ft == "javascript" or ft == "javascriptreact" or ft == "typescript" or ft == "typescriptreact" then
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = vim.api.nvim_create_augroup("EslintFixAll." .. bufnr, {}),
+			buffer = bufnr,
+			callback = function()
+				-- Run ESLint fix all code action
+				vim.lsp.buf.code_action({
+					context = {
+						only = { "source.fixAll.eslint" },
+						diagnostics = {},
+					},
+					apply = true,
+				})
+			end,
+		})
+	end
 end
 
 -- Setup floating window handlers

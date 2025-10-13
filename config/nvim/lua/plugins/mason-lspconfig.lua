@@ -14,6 +14,7 @@ return {
 				"tailwindcss",
 				"bashls",
 				"jsonls",
+				"eslint", -- Added ESLint LSP
 			},
 			automatic_installation = true,
 		})
@@ -65,80 +66,57 @@ return {
 			},
 		}
 
-		-- Other servers with default configuration
-		local default_servers = { "html", "cssls", "tailwindcss", "bashls", "jsonls" }
-		for _, server in ipairs(default_servers) do
-			vim.lsp.config[server] = {
-				on_attach = lsp_config.on_attach,
-				capabilities = lsp_config.get_capabilities(),
-			}
-		end
+		-- ⭐ ESLint Language Server configuration
+  vim.lsp.config.eslint = {
+	  on_attach = lsp_config.on_attach, -- This already handles ESLint fixes via code actions
+	  capabilities = lsp_config.get_capabilities(),
+	  settings = {
+		  codeAction = {
+			  disableRuleComment = {
+				  enable = true,
+				  location = "separateLine",
+			  },
+			  showDocumentation = {
+				  enable = true,
+			  },
+		  },
+		  codeActionOnSave = {
+			  enable = true,
+			  mode = "all",
+		  },
+		  format = true,
+		  nodePath = "",
+		  onIgnoredFiles = "off",
+		  packageManager = "npm",
+		  quiet = false,
+		  rulesCustomizations = {},
+		  run = "onType",
+		  useESLintClass = false,
+		  validate = "on",
+		  workingDirectory = {
+			  mode = "auto",
+		  },
+	  },
+  }
 
-		-- Enable all configured servers
-		vim.lsp.enable({
-			"lua_ls",
-			"vtsls",
-			"html",
-			"cssls",
-			"tailwindcss",
-			"bashls",
-			"jsonls",
-		})
+  -- Other servers with default configuration
+  local default_servers = { "html", "cssls", "tailwindcss", "bashls", "jsonls" }
+  for _, server in ipairs(default_servers) do
+	  vim.lsp.config[server] = {
+		  on_attach = lsp_config.on_attach,
+		  capabilities = lsp_config.get_capabilities(),
+	  }
+  end
 
-		-- Uncomment and configure Tailwind CSS if needed
-		-- vim.lsp.config.tailwindcss = {
-		-- 	on_attach = lsp_config.on_attach,
-		-- 	capabilities = lsp_config.get_capabilities(),
-		-- 	root_markers = {
-		-- 		"tailwind.config.mjs",
-		-- 		"tailwind.config.js",
-		-- 		"tailwind.config.cjs",
-		-- 		"tailwind.config.ts",
-		-- 		"package.json"
-		-- 	},
-		-- 	filetypes = {
-		-- 		"aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure",
-		-- 		"django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs",
-		-- 		"erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs",
-		-- 		"html", "html-eex", "heex", "jade", "leaf", "liquid", "markdown",
-		-- 		"mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig",
-		-- 		"css", "less", "postcss", "sass", "scss", "stylus", "sugarss",
-		-- 		"javascript", "javascriptreact", "reason", "rescript", "typescript",
-		-- 		"typescriptreact", "vue", "svelte", "templ",
-		-- 	},
-		-- 	settings = {
-		-- 		tailwindCSS = {
-		-- 			classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
-		-- 			includeLanguages = {
-		-- 				typescript = "javascript",
-		-- 				typescriptreact = "javascript",
-		-- 				eelixir = "html-eex",
-		-- 				elixir = "html-eex",
-		-- 				eruby = "erb",
-		-- 				heex = "html-eex",
-		-- 				htmlangular = "html",
-		-- 				templ = "html",
-		-- 			},
-		-- 			lint = {
-		-- 				cssConflict = "warning",
-		-- 				invalidApply = "error",
-		-- 				invalidConfigPath = "error",
-		-- 				invalidScreen = "error",
-		-- 				invalidTailwindDirective = "error",
-		-- 				invalidVariant = "error",
-		-- 				recommendedVariantOrder = "warning",
-		-- 			},
-		-- 			validate = true,
-		-- 			experimental = {
-		-- 				classRegex = {
-		-- 					"classify\\(([^)]*)",
-		-- 					"cn\\(\\s*classify\\([^)]*\\)",
-		-- 					"(base|sm|md|lg|xl|xxl)\\s*:\\s*[\"']([^\"']*)[\"']",
-		-- 					":\\s*[\"']([^\"']*)[\"']",
-		-- 				},
-		-- 			},
-		-- 		},
-		-- 	},
-		-- }
-	end,
+  -- Enable all configured servers
+  vim.lsp.enable({
+	  "lua_ls",
+	  "vtsls",
+	  "html",
+	  "cssls",
+	  "tailwindcss",
+	  "bashls",
+	  "jsonls",
+	  "eslint",
+  })  end,
 }

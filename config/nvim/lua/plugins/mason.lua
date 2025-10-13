@@ -15,6 +15,7 @@ return {
       "shfmt",
       "eslint_d",
       "shellcheck",
+      "eslint-lsp",
     },
   },
   config = function(_, opts)
