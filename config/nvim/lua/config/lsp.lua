@@ -104,6 +104,53 @@ end
 local autoformat_enabled = true
 local autoformat_buffer_disabled = {}
 
+local ts_filetypes = {
+        typescript = true,
+        typescriptreact = true,
+        javascript = true,
+        javascriptreact = true,
+}
+
+local function organize_imports(client, bufnr)
+        if not client.supports_method("textDocument/codeAction") then
+                return false
+        end
+
+        if not ts_filetypes[vim.bo[bufnr].filetype] then
+                return false
+        end
+
+        local params = vim.lsp.util.make_range_params()
+        params.context = { only = { "source.organizeImports" }, diagnostics = {} }
+
+        local result = client.request_sync("textDocument/codeAction", params, 1000, bufnr)
+        if not result or not result.result then
+                return false
+        end
+
+        local applied = false
+
+        for _, action in ipairs(result.result) do
+                if action.edit then
+                        vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding or "utf-16")
+                        applied = true
+                elseif action.command then
+                        local command = action.command
+                        if type(command) == "table" then
+                                vim.lsp.buf.execute_command(command)
+                        else
+                                vim.lsp.buf.execute_command({
+                                        command = command,
+                                        arguments = action.arguments,
+                                })
+                        end
+                        applied = true
+                end
+        end
+
+        return applied
+end
+
 -- Toggle auto-format globally
 function M.toggle_autoformat_global()
 	autoformat_enabled = not autoformat_enabled
@@ -157,17 +204,28 @@ function M.on_attach(client, bufnr)
 	end
 
 	-- Auto-format on save (with toggle support)
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-			buffer = bufnr,
-			callback = function()
-				if should_format(bufnr) then
-					vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
-				end
-			end,
-		})
-	end
+        local can_format = client.supports_method("textDocument/formatting")
+        local can_organize = client.supports_method("textDocument/codeAction")
+
+        if can_format or can_organize then
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                        group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
+                        buffer = bufnr,
+                        callback = function()
+                                if not should_format(bufnr) then
+                                        return
+                                end
+
+                                if can_organize then
+                                        organize_imports(client, bufnr)
+                                end
+
+                                if can_format then
+                                        vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
+                                end
+                        end,
+                })
+        end
 end
 
 -- Setup floating window handlers
