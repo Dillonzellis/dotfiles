@@ -5,6 +5,7 @@ tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "mongodb/brew"
 tap "smudge/smudge"
+tap "nikitabobko/tap" 
 
 brew "git"                       
 brew "gh"                        
@@ -75,13 +76,12 @@ cask "flux-app"
 
 cask "ghostty"                    
 cask "figma"
+cask "aerospace"
 # cask "orbstack"                   
 # cask "visual-studio-code"         
 # cask "docker"                     
 
-cask "rectangle"                  
 cask "notion"                     
-# cask "alt-tab"                    
 
 cask "firefox"                    
 cask "google-chrome"              
