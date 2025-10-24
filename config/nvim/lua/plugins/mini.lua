@@ -4,7 +4,14 @@ return {
 		"echasnovski/mini.pick",
 		version = false, -- Use HEAD
 		config = function()
-			require("mini.pick").setup()
+			local pick = require("mini.pick")
+			pick.setup({
+				options = {
+					use_cache = true,
+				},
+			})
+
+
 
 			-- Which-Key integration picker
 			local function pick_which_key()
@@ -221,7 +228,34 @@ return {
 		keys = {
 			{ "<leader><leader>", "<cmd>Pick files<cr>", desc = "Find Files" },
 			{ "<leader>fb", "<cmd>Pick buffers<cr>", desc = "Find Buffers" },
-			{ "<leader>fg", "<cmd>Pick grep_live<cr>", desc = "Live Grep" },
+			{
+				"<leader>fg",
+				function()
+					vim.ui.input({ prompt = "Grep:" }, function(input)
+						if input and input ~= "" then
+							require("mini.pick").builtin.cli({
+								command = { "rg", "--line-number", "--column", "--no-heading", "--color=never", input },
+								postprocess = function(lines)
+									local items = {}
+									for _, line in ipairs(lines) do
+										local file, lnum, col, text = line:match("^([^:]+):(%d+):(%d+):(.*)$")
+										if file then
+											table.insert(items, {
+												text = string.format("%s:%s: %s", file, lnum, text:gsub("^%s+", "")),
+												path = file,
+												lnum = tonumber(lnum),
+												col = tonumber(col),
+											})
+										end
+									end
+									return items
+								end,
+							})
+						end
+					end)
+				end,
+				desc = "Grep Search"
+			},
 			{
 				"<leader>fk",
 				function()
@@ -236,6 +270,7 @@ return {
 				end,
 				desc = "Find Which-Key Commands",
 			},
+
 			{
 				"<leader>h",
 				function()
