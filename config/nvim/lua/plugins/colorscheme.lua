@@ -31,53 +31,53 @@ return {
 	--   end,
 	-- },
 
-	-- {
-	--   "rebelot/kanagawa.nvim",
-	--   lazy = false,
-	--   priority = 1000,
-	--   config = function()
-	--     require("kanagawa").setup({
-	--       transparent = true,
-	--       colors = {
-	--         theme = {
-	--           all = {
-	--             ui = {
-	--               bg_gutter = "none"
-	--             }
-	--           }
-	--         }
-	--       },
-	--     })
-	--     vim.cmd.colorscheme("kanagawa")
-	--   end,
-	-- },
-
 	{
-		"EdenEast/nightfox.nvim",
+		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("nightfox").setup({
-				options = {
-					transparent = true,
-					terminal_colors = true,
+			require("kanagawa").setup({
+				transparent = true,
+				colors = {
+					theme = {
+						all = {
+							ui = {
+								bg_gutter = "none",
+							},
+						},
+					},
 				},
 			})
-			vim.cmd.colorscheme("carbonfox") -- or nightfox, dawnfox, etc.
+			vim.cmd.colorscheme("kanagawa")
 		end,
 	},
 
 	-- {
-	--   "neanias/everforest-nvim",
-	--   lazy = false,
-	--   priority = 1000,
-	--   config = function()
-	--     require("everforest").setup({
-	--       background = "medium", -- soft, medium, hard
-	--       transparent_background_level = 2,
-	--     })
-	--     vim.cmd.colorscheme("everforest")
-	--   end,
+	-- 	"EdenEast/nightfox.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("nightfox").setup({
+	-- 			options = {
+	-- 				transparent = true,
+	-- 				terminal_colors = true,
+	-- 			},
+	-- 		})
+	-- 		vim.cmd.colorscheme("carbonfox") -- or nightfox, dawnfox, etc.
+	-- 	end,
+	-- },
+
+	-- {
+	-- 	"neanias/everforest-nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("everforest").setup({
+	-- 			background = "medium", -- soft, medium, hard
+	-- 			transparent_background_level = 2,
+	-- 		})
+	-- 		vim.cmd.colorscheme("everforest")
+	-- 	end,
 	-- },
 
 	-- {
