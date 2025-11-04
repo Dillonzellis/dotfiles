@@ -13,6 +13,7 @@ brew "neovim"
 brew "tmux"                       
 brew "curl"                       
 brew "wget"                       
+brew "gcc"
 
 brew "lua-language-server"
 # brew "typescript-language-server"  
