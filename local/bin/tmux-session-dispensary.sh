@@ -4,15 +4,21 @@
 DIRS=(
   "$HOME/wks/"
   "$HOME/dotfiles"
+  "$HOME/orgfiles"
 )
 
 # Fuzzy-pick from the list using `fd` + `sk`
 selected=$(
   {
-    # Get subdirectories from wks (with trailing slash, so it searches inside)
-    fd . "$HOME/wks/" --type=dir --max-depth=1 --full-path --base-directory "$HOME"
-    # Add dotfiles root directory itself (no trailing slash, so just the directory)
-    echo "$HOME/dotfiles"
+    for dir in "${DIRS[@]}"; do
+      if [[ "$dir" == "$HOME/wks/" ]]; then
+        # List subdirectories of wks
+        fd . "$dir" --type=dir --max-depth=1 --full-path --base-directory "$HOME"
+      else
+        # Just include the directory itself
+        echo "$dir"
+      fi
+    done
   } |
     sed "s|^$HOME/||" |
     sk --margin 10% --color="bw"
