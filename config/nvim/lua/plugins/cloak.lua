@@ -15,13 +15,13 @@ return {
 	},
 	keys = {
 		{
-			"leader>uct",
+			"<leader>ct",
 			"<cmd>CloakToggle<CR>",
 			desc = "Toggle cloak",
 			mode = "n",
 		},
 		{
-			"<leader>ucp",
+			"<leader>cp",
 			"<cmd>CloakPreviewLine<CR>",
 			desc = "Preview cloaked line",
 			mode = "n",
