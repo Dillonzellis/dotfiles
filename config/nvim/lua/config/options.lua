@@ -1,6 +1,7 @@
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.wrap = false
+vim.o.conceallevel = 2
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
@@ -46,7 +47,7 @@ vim.o.completeopt = "menu,menuone,noselect"
 vim.o.pumheight = 10
 
 vim.opt.guicursor =
-"n-v-c:block-blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250,r-cr:hor20,o:hor50,sm:block-blinkwait175-blinkoff150-blinkon175"
+	"n-v-c:block-blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25-blinkwait700-blinkoff400-blinkon250,r-cr:hor20,o:hor50,sm:block-blinkwait175-blinkoff150-blinkon175"
 
 -- Better diff options
 vim.opt.diffopt:append("linematch:60")
