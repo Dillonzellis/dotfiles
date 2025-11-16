@@ -38,9 +38,11 @@ gc() {
     fi
 }
 
+
+alias dsu='~/.local/bin/dsu-aerospace.sh'
+
 export EDITOR=nvim
 
-# Add local bin to PATH (portable across users)
 export PATH="$HOME/.local/bin:$PATH"
 
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh

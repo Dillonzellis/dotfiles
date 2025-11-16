@@ -199,13 +199,13 @@ if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace B"
 
 [[on-window-detected]]
-if.app-id = 'com.mitchellh.ghostty  '
+if.app-id = 'com.mitchellh.ghostty'
 run = "move-node-to-workspace G"
 
 [[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap '
+if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace S"
 
 [[on-window-detected]]
-if.app-id = 'com.spotify.client '
+if.app-id = 'com.spotify.client'
 run = "move-node-to-workspace M"
