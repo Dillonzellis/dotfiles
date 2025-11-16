@@ -1,7 +1,7 @@
 # theme = Liquid Carbon Transparent
 theme = Kanagawa Dragon
 font-size = 15
-background-opacity = .9
+background-opacity = 0.95
 font-family = "0xProto Nerd Font"
 background-blur = 0
 
