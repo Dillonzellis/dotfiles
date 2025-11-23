@@ -26,6 +26,7 @@ alias dl="cd ~/wks/dl"
 alias desk="cd ~/Desktop"
 
 alias ns="npx fusion start"
+alias wip="!git add -A; git rm $(git ls-files --deleted) 2>/dev/null; git commit --no-verify --no-gpg-sign -m \"--wip-- [skip ci]\""
 
 
 gc() {
@@ -37,6 +38,7 @@ gc() {
         git commit -m "$*-Dillon"
     fi
 }
+
 
 
 alias dsu='~/.local/bin/dsu-aerospace.sh'
