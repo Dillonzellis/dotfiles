@@ -28,7 +28,6 @@ alias desk="cd ~/Desktop"
 alias ns="npx fusion start"
 alias wip="!git add -A; git rm $(git ls-files --deleted) 2>/dev/null; git commit --no-verify --no-gpg-sign -m \"--wip-- [skip ci]\""
 
-
 gc() {
     branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     if [[ "$branch" == *"/"* ]]; then
@@ -39,7 +38,13 @@ gc() {
     fi
 }
 
-
+grecent() {
+  git reflog --date=short |
+    grep 'checkout:' |
+    sed -E 's/.* to ([^ ]+).*/\1/' |
+    awk '!seen[$0]++' |
+    head
+}
 
 alias dsu='~/.local/bin/dsu-aerospace.sh'
 
