@@ -46,6 +46,12 @@ grecent() {
     head
 }
 
+fco() {
+  local b
+  b="$(git branch --format='%(refname:short)' | fzf --prompt='checkout> ')"
+  [[ -n "$b" ]] && git checkout "$b"
+}
+
 alias dsu='~/.local/bin/dsu-aerospace.sh'
 
 export EDITOR=nvim
