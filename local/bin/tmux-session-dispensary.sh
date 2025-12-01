@@ -1,41 +1,68 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Directories to search
 DIRS=(
-  "$HOME/wks/"
+  "$HOME/wks"
   "$HOME/dotfiles"
   "$HOME/orgfiles"
 )
 
-# Fuzzy-pick from the list using `fd` + `sk`
-selected=$(
-  {
-    for dir in "${DIRS[@]}"; do
-      if [[ "$dir" == "$HOME/wks/" ]]; then
-        # List subdirectories of wks
-        fd . "$dir" --type=dir --max-depth=1 --full-path --base-directory "$HOME"
-      else
-        # Just include the directory itself
-        echo "$dir"
-      fi
-    done
-  } |
-    sed "s|^$HOME/||" |
-    sk --margin 10% --color="bw"
-)
+FD_BIN="$(command -v fd || command -v fdfind || true)"
 
-# If user hit Enter without selecting, switch back to last session
-if [[ -z $selected ]]; then
-  tmux switch-client -l
+if ! command -v fzf >/dev/null 2>&1; then
+  echo "Missing dependency: fzf" >&2
+  exit 1
+fi
+
+list_paths() {
+  for dir in "${DIRS[@]}"; do
+    if [[ "$dir" == "$HOME/wks" ]]; then
+      if [[ -n "${FD_BIN}" ]]; then
+        "$FD_BIN" --type d --max-depth 1 . "$dir"
+      else
+        find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+      fi
+    else
+      echo "$dir"
+    fi
+  done
+}
+
+# Use a tmux popup when inside tmux + tmux supports it; otherwise normal fzf
+fzf_pick() {
+  if [[ -n "${TMUX:-}" ]] && tmux display-message -p '#{popup_supported}' 2>/dev/null | grep -q 1; then
+    # run fzf in a popup and print selection
+    tmux popup -E -w 80% -h 70% "cat | fzf --prompt='session> '"
+  else
+    fzf --prompt='session> '
+  fi
+}
+
+selected="$(
+  list_paths |
+    sed "s|^$HOME/||" |
+    fzf_pick
+)"
+
+# If user hit Enter without selecting
+if [[ -z "${selected}" ]]; then
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -l || true
+  fi
   exit 0
 fi
 
-# Add home path back and create session name
 selected="$HOME/$selected"
-selected_name=$(basename "$selected" | tr . _)
+selected_name="$(basename "$selected" | tr . _)"
 
-# Create session if it doesn't exist, then switch to it
-if ! tmux has-session -t="$selected_name" 2>/dev/null; then
+if [[ -z "${TMUX:-}" ]]; then
+  # outside tmux: attach or create in one shot
+  tmux new-session -A -s "$selected_name" -c "$selected"
+  exit 0
+fi
+
+# inside tmux: create if missing, then switch
+if ! tmux has-session -t "$selected_name" 2>/dev/null; then
   tmux new-session -ds "$selected_name" -c "$selected"
 fi
 
