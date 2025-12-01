@@ -11,8 +11,6 @@ return {
 				},
 			})
 
-
-
 			-- Which-Key integration picker
 			local function pick_which_key()
 				local wk_ok, wk = pcall(require, "which-key")
@@ -254,7 +252,7 @@ return {
 						end
 					end)
 				end,
-				desc = "Grep Search"
+				desc = "Grep Search",
 			},
 			{
 				"<leader>fk",
@@ -269,14 +267,6 @@ return {
 					_G.pick_which_key()
 				end,
 				desc = "Find Which-Key Commands",
-			},
-
-			{
-				"<leader>h",
-				function()
-					require("mini.pick").builtin.cli({ command = { "rg", "--files", "--hidden" } })
-				end,
-				desc = "Find Files (with hidden)",
 			},
 		},
 	},
