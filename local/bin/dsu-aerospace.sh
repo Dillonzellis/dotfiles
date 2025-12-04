@@ -14,7 +14,7 @@ ensure_app_window() {
   # Try to find an existing window for this app
   local window_id
   window_id="$(
-    aerospace list-windows --all \
+    aerospace list-windows --monitor all \
       --app-bundle-id "$bundle_id" \
       --format '%{window-id}' |
       head -n1 || true
@@ -28,7 +28,7 @@ ensure_app_window() {
     for _ in {1..10}; do
       sleep 0.3
       window_id="$(
-        aerospace list-windows --all \
+        aerospace list-windows --monitor all \
           --app-bundle-id "$bundle_id" \
           --format '%{window-id}' |
           head -n1 || true
