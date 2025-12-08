@@ -229,30 +229,23 @@ return {
 			{
 				"<leader>fg",
 				function()
-					vim.ui.input({ prompt = "Grep:" }, function(input)
-						if input and input ~= "" then
-							require("mini.pick").builtin.cli({
-								command = { "rg", "--line-number", "--column", "--no-heading", "--color=never", input },
-								postprocess = function(lines)
-									local items = {}
-									for _, line in ipairs(lines) do
-										local file, lnum, col, text = line:match("^([^:]+):(%d+):(%d+):(.*)$")
-										if file then
-											table.insert(items, {
-												text = string.format("%s:%s: %s", file, lnum, text:gsub("^%s+", "")),
-												path = file,
-												lnum = tonumber(lnum),
-												col = tonumber(col),
-											})
-										end
-									end
-									return items
-								end,
-							})
-						end
-					end)
+					require("mini.pick").builtin.grep_live({ tool = "rg" })
 				end,
-				desc = "Grep Search",
+				desc = "Grep Live (rg)",
+			},
+			{
+				"<leader>fG",
+				function()
+					require("mini.pick").builtin.grep({ tool = "rg" }) -- prompts for pattern
+				end,
+				desc = "Grep (rg)",
+			},
+			{
+				"<leader>fw",
+				function()
+					require("mini.pick").builtin.grep({ tool = "rg", pattern = vim.fn.expand("<cword>") })
+				end,
+				desc = "Grep word under cursor (rg)",
 			},
 			{
 				"<leader>fk",

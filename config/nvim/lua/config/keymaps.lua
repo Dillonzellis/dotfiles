@@ -8,14 +8,14 @@ vim.keymap.set("n", "<leader>ln", ":set relativenumber!<CR>", { desc = "Toggle R
 vim.keymap.set("n", "<leader>la", "<cmd>Lazy<CR>", { desc = "Show Lazy Menu" })
 
 vim.keymap.set("n", "<leader>ud", function()
-  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = "Toggle Diagnostics" })
 
 vim.keymap.set(
-  "n",
-  "<leader>bs",
-  "<cmd>:enew | setlocal buftype=nofile bufhidden=hide noswapfile<CR>",
-  { desc = "Create Scratch Budder" }
+	"n",
+	"<leader>bs",
+	"<cmd>:enew | setlocal buftype=nofile bufhidden=hide noswapfile<CR>",
+	{ desc = "Create Scratch Buffer" }
 )
 
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered on screen)" })

@@ -82,6 +82,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(zoxide init zsh)"
 
-export PATH=$PATH:/Users/dillon.ellis/.spicetify
+# export PATH=$PATH:/Users/dillon.ellis/.spicetify
 
-export PATH=$PATH:/Users/dillonellis/.spicetify
+# export PATH=$PATH:/Users/dillonellis/.spicetify
