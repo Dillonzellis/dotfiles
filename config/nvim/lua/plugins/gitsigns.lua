@@ -91,10 +91,10 @@ return {
 				map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
 
 				-- Git blame
-				map("n", "<leader>hb", function()
+				map("n", "<leader>gl", function()
 					gitsigns.blame_line({ full = true })
 				end, { desc = "Blame line (full)" })
-				map("n", "<leader>hB", gitsigns.toggle_current_line_blame, { desc = "Toggle line blame" })
+				map("n", "<leader>gL", gitsigns.toggle_current_line_blame, { desc = "Toggle line blame" })
 
 				-- Git browse (open in browser)
 				map("n", "<leader>gB", function()
