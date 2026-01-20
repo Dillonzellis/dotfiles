@@ -25,14 +25,16 @@ print_usage() {
   echo "                  If omitted, extracts prefix from current branch"
   echo ""
   echo "Options:"
-  echo "  -h, --help      Show this help message"
-  echo "  -v, --verbose   Show additional commit details"
+  echo "  -h, --help         Show this help message"
+  echo "  -v, --verbose      Show additional commit details"
+  echo "  -T, --no-truncate  Do not truncate commit subjects in summary output"
   echo ""
   echo "Examples:"
   echo "  $SCRIPT_NAME                      # Auto-detect from branch (e.g., SPD-71/feature → search 'SPD-71')"
   echo "  $SCRIPT_NAME \"bug fix\"            # Search for commits containing 'bug fix'"
   echo "  $SCRIPT_NAME SPD-123              # Search for commits containing 'SPD-123'"
   echo "  $SCRIPT_NAME -v \"feature\"         # Search with verbose output"
+  echo "  $SCRIPT_NAME -T SPD-123           # Summary output without truncation"
   echo "  $SCRIPT_NAME 'PDEV-975\\|PDEV-977' # Search for multiple tickets"
   echo ""
   echo "Branch Auto-Detection:"
@@ -42,7 +44,7 @@ print_usage() {
   echo ""
   echo "Output:"
   echo "  • Copies space-separated commit hashes to clipboard"
-  echo "  • Shows short hash and truncated commit message for verification"
+  echo "  • Shows short hash and commit message for verification"
 }
 
 print_error() {
@@ -94,6 +96,7 @@ check_clipboard() {
 main() {
   local search_term=""
   local verbose=false
+  local no_truncate=false
   local clipboard_cmd=""
 
   while [[ $# -gt 0 ]]; do
@@ -104,6 +107,10 @@ main() {
       ;;
     -v | --verbose)
       verbose=true
+      shift
+      ;;
+    -T | --no-truncate)
+      no_truncate=true
       shift
       ;;
     -*)
@@ -178,7 +185,7 @@ main() {
 
   if [[ "$verbose" == true ]]; then
     echo "Detailed commit information:"
-    git log --grep="$search_term" --no-merges --format='  %C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %s' --date=short
+    git log --grep="$search_term" --no-merges --reverse --format='  %C(yellow)%h%C(reset) %C(blue)%ad%C(reset) %s' --date=short
   else
     echo "Commit summary:"
     echo "$hashes" | tr ' ' '\n' | while read -r hash; do
@@ -186,13 +193,18 @@ main() {
         local short_hash commit_msg truncated_msg
         short_hash=$(git rev-parse --short "$hash" 2>/dev/null)
         commit_msg=$(git show -s --format='%s' "$hash" 2>/dev/null)
-        truncated_msg="${commit_msg:0:50}"
 
-        if [[ ${#commit_msg} -gt 50 ]]; then
-          truncated_msg="${truncated_msg}..."
+        if [[ "$no_truncate" == true ]]; then
+          echo "  $short_hash $commit_msg"
+        else
+          truncated_msg="${commit_msg:0:50}"
+
+          if [[ ${#commit_msg} -gt 50 ]]; then
+            truncated_msg="${truncated_msg}..."
+          fi
+
+          echo "  $short_hash $truncated_msg"
         fi
-
-        echo "  $short_hash $truncated_msg"
       fi
     done
   fi
