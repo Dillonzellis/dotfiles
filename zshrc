@@ -26,6 +26,7 @@ alias dl="cd ~/wks/dl"
 alias desk="cd ~/Desktop"
 
 alias ns="npx fusion start"
+alias ajcdev="npx cross-env NODE_OPTIONS=--no-deprecation next dev --turbo"
 
 
 wip() {
