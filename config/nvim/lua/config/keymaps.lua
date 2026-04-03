@@ -16,6 +16,11 @@ vim.keymap.set("n", "<leader>uf", function()
 	print("Format on save: " .. (vim.g.disable_autoformat and "disabled" or "enabled"))
 end, { desc = "Toggle Format on Save" })
 
+vim.keymap.set("n", "<leader>uh", function()
+	vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+	print("Inlay hints: " .. (vim.lsp.inlay_hint.is_enabled() and "enabled" or "disabled"))
+end, { desc = "Toggle Inlay Hints" })
+
 vim.keymap.set(
 	"n",
 	"<leader>bs",
