@@ -11,7 +11,7 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
 
-vim.o.updatetime = 300
+vim.o.updatetime = 250
 vim.o.cursorline = true
 
 vim.o.mouse = "a"
@@ -22,14 +22,12 @@ vim.o.incsearch = true
 
 vim.o.scrolloff = 8
 vim.o.sidescrolloff = 8
-
 vim.o.wildmenu = true
 
 vim.o.splitbelow = true
 vim.o.splitright = true
 
 vim.o.ignorecase = true
-vim.o.smartindent = true
 vim.o.termguicolors = true
 vim.o.signcolumn = "yes"
 vim.o.clipboard = "unnamedplus"
@@ -40,10 +38,7 @@ vim.o.timeoutlen = 300
 vim.o.backspace = "indent,eol,start"
 
 vim.o.winbar = "%=%m %f"
-vim.o.sidescrolloff = 8
 
--- Enhanced options for better LSP experience
-vim.o.updatetime = 250
 vim.o.completeopt = "menu,menuone,noselect"
 vim.o.pumheight = 10
 
@@ -55,3 +50,8 @@ vim.opt.diffopt:append("linematch:60")
 
 vim.opt.redrawtime = 10000
 vim.opt.maxmempattern = 20000
+
+vim.o.foldcolumn = "1"
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true

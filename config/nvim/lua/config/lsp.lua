@@ -35,50 +35,38 @@ function M.setup_lsp_keymaps(bufnr)
 	local opts = { buffer = bufnr, silent = true }
 
 	-- Navigation
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-	vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-	vim.keymap.set("n", "gI", vim.lsp.buf.implementation, opts)
-	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts)
-	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-	vim.keymap.set("n", "gK", vim.lsp.buf.signature_help, opts)
-	vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, opts)
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+	vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "References" }))
+	vim.keymap.set("n", "gI", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
+	vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
+	vim.keymap.set("n", "gK", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
+	vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
 
 	-- Code actions
-	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-	vim.keymap.set("n", "<leader>cc", vim.lsp.codelens.run, opts)
-	vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, opts)
-	vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, opts)
+	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
+	vim.keymap.set("n", "<leader>cc", vim.lsp.codelens.run, vim.tbl_extend("force", opts, { desc = "Run codelens" }))
+	vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, vim.tbl_extend("force", opts, { desc = "Refresh codelens" }))
+	vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
 
-	-- Formatting
-	vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-		vim.lsp.buf.format({ async = true })
-	end, opts)
-
-	-- Toggle auto-format
-	vim.keymap.set("n", "<leader>cF", function()
-		M.toggle_autoformat_buffer()
-	end, opts)
-	vim.keymap.set("n", "<leader>cG", function()
-		M.toggle_autoformat_global()
-	end, opts)
 
 	-- Diagnostics
-	vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, opts)
-	vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-	vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+	vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Open diagnostic float" }))
+	vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+	vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
 	vim.keymap.set("n", "]e", function()
 		vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-	end, opts)
+	end, vim.tbl_extend("force", opts, { desc = "Next error" }))
 	vim.keymap.set("n", "[e", function()
 		vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-	end, opts)
+	end, vim.tbl_extend("force", opts, { desc = "Previous error" }))
 	vim.keymap.set("n", "]w", function()
 		vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
-	end, opts)
+	end, vim.tbl_extend("force", opts, { desc = "Next warning" }))
 	vim.keymap.set("n", "[w", function()
 		vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
-	end, opts)
+	end, vim.tbl_extend("force", opts, { desc = "Previous warning" }))
 end
 
 -- LSP Capabilities (updated for better compatibility)
@@ -100,37 +88,6 @@ function M.get_capabilities()
 	return capabilities
 end
 
--- Auto-format state tracking
-local autoformat_enabled = true
-local autoformat_buffer_disabled = {}
-
--- Toggle auto-format globally
-function M.toggle_autoformat_global()
-	autoformat_enabled = not autoformat_enabled
-	if autoformat_enabled then
-		vim.notify("Auto-format enabled globally", vim.log.levels.INFO)
-	else
-		vim.notify("Auto-format disabled globally", vim.log.levels.WARN)
-	end
-end
-
--- Toggle auto-format for current buffer
-function M.toggle_autoformat_buffer()
-	local bufnr = vim.api.nvim_get_current_buf()
-	autoformat_buffer_disabled[bufnr] = not autoformat_buffer_disabled[bufnr]
-
-	if autoformat_buffer_disabled[bufnr] then
-		vim.notify("Auto-format disabled for this buffer", vim.log.levels.WARN)
-	else
-		vim.notify("Auto-format enabled for this buffer", vim.log.levels.INFO)
-	end
-end
-
--- Check if auto-format is enabled for current buffer
-local function should_format(bufnr)
-	return autoformat_enabled and not autoformat_buffer_disabled[bufnr]
-end
-
 -- LSP on_attach function (updated for Neovim 0.11+)
 function M.on_attach(client, bufnr)
 	M.setup_lsp_keymaps(bufnr)
@@ -144,85 +101,95 @@ function M.on_attach(client, bufnr)
 	if client.supports_method("textDocument/documentHighlight") then
 		vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
 		vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
-		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+		vim.api.nvim_create_autocmd("CursorHold", {
 			group = "lsp_document_highlight",
 			buffer = bufnr,
 			callback = vim.lsp.buf.document_highlight,
 		})
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+		vim.api.nvim_create_autocmd("CursorMoved", {
 			group = "lsp_document_highlight",
 			buffer = bufnr,
 			callback = vim.lsp.buf.clear_references,
 		})
 	end
 
-	-- Auto-format on save (with toggle support)
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vim.api.nvim_create_augroup("LspFormat." .. bufnr, {}),
-			buffer = bufnr,
-			callback = function()
-				if should_format(bufnr) then
-					vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
-				end
-			end,
-		})
-	end
 
-	-- ⭐ NEW: Run ESLint code actions on save for JS/TS files
-	local ft = vim.bo[bufnr].filetype
-	if ft == "javascript" or ft == "javascriptreact" or ft == "typescript" or ft == "typescriptreact" then
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vim.api.nvim_create_augroup("EslintFixAll." .. bufnr, {}),
-			buffer = bufnr,
-			callback = function()
-				-- Run ESLint fix all code action
-				vim.lsp.buf.code_action({
-					context = {
-						only = { "source.fixAll.eslint" },
-						diagnostics = {},
-					},
-					apply = true,
-				})
-			end,
-		})
-	end
 end
 
--- Setup floating window handlers
-function M.setup_handlers()
-	-- Customize LSP floating windows
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-		border = "rounded",
-	})
+-- Status line integration (cached, updated only on LSP attach/detach)
+local lsp_status_cache = ""
 
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-		border = "rounded",
-	})
-end
-
--- Status line integration (updated for Neovim 0.11+)
 function M.get_lsp_status()
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	if #clients == 0 then
-		return ""
-	end
+	return lsp_status_cache
+end
 
-	local names = {}
-	for _, client in ipairs(clients) do
-		table.insert(names, client.name)
-	end
+-- Japanese mode display for statusline
+_G.j_mode = function()
+	local m = vim.api.nvim_get_mode().mode
+	local map = {
+		n = "通常",
+		no = "通常",
+		i = "挿入",
+		ic = "挿入",
+		v = "ビジュアル",
+		V = "行ビジュアル",
+		["\22"] = "矩形",
+		c = "コマンド",
+		R = "置換",
+		Rx = "仮置換",
+		s = "選択",
+		S = "行選択",
+		t = "ターミナル",
+	}
+	return map[m] or m
+end
 
-	return "[LSP: " .. table.concat(names, ",") .. "]"
+-- Korean mode display for statusline
+_G.k_mode = function()
+	local m = vim.api.nvim_get_mode().mode
+	local map = {
+		n = "일반",
+		no = "일반",
+		i = "삽입",
+		ic = "삽입",
+		v = "비주얼",
+		V = "줄비주얼",
+		["\22"] = "블록",
+		c = "명령",
+		R = "교체",
+		Rx = "가교체",
+		s = "선택",
+		S = "줄선택",
+		t = "터미널",
+	}
+	return map[m] or m
 end
 
 -- Main setup function
 function M.setup()
 	M.setup_diagnostics()
-	M.setup_handlers()
 
-	-- Setup status line
-	vim.o.statusline = "%f %m%r%h%w [%{&ff}] [%{&ft}] %{v:lua.require('config.lsp').get_lsp_status()} %= %l,%c %P"
+	vim.o.showmode = false
+
+	vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
+		callback = function()
+			vim.schedule(function()
+				local clients = vim.lsp.get_clients({ bufnr = 0 })
+				if #clients == 0 then
+					lsp_status_cache = ""
+				else
+					local names = {}
+					for _, c in ipairs(clients) do
+						table.insert(names, c.name)
+					end
+					lsp_status_cache = "[LSP: " .. table.concat(names, ",") .. "]"
+				end
+				vim.cmd.redrawstatus()
+			end)
+		end,
+	})
+
+	vim.o.statusline = "%{%v:lua.k_mode()%} %f %m%r%h%w [%{&ft}] %{v:lua.require('config.lsp').get_lsp_status()} %= %l,%c %P"
 end
 
 return M

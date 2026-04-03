@@ -3,6 +3,7 @@ return {
 	dependencies = { "mason.nvim", "nvim-lspconfig" },
 	config = function()
 		local lsp_config = require("config.lsp")
+		local capabilities = lsp_config.get_capabilities()
 
 		-- Install LSP servers automatically
 		require("mason-lspconfig").setup({
@@ -24,7 +25,7 @@ return {
 		-- Lua Language Server
 		vim.lsp.config.lua_ls = {
 			on_attach = lsp_config.on_attach,
-			capabilities = lsp_config.get_capabilities(),
+			capabilities = capabilities,
 			settings = {
 				Lua = {
 					runtime = { version = "LuaJIT" },
@@ -41,7 +42,7 @@ return {
 		-- TypeScript/JavaScript Language Server
 		vim.lsp.config.vtsls = {
 			on_attach = lsp_config.on_attach,
-			capabilities = lsp_config.get_capabilities(),
+			capabilities = capabilities,
 			settings = {
 				typescript = {
 					inlayHints = {
@@ -68,8 +69,8 @@ return {
 
 		-- ⭐ ESLint Language Server configuration
   vim.lsp.config.eslint = {
-	  on_attach = lsp_config.on_attach, -- This already handles ESLint fixes via code actions
-	  capabilities = lsp_config.get_capabilities(),
+	  on_attach = lsp_config.on_attach,
+	  capabilities = capabilities,
 	  settings = {
 		  codeAction = {
 			  disableRuleComment = {
@@ -100,13 +101,36 @@ return {
   }
 
   -- Other servers with default configuration
-  local default_servers = { "html", "cssls", "tailwindcss", "bashls", "jsonls" }
+  local default_servers = { "html", "cssls", "bashls", "jsonls" }
   for _, server in ipairs(default_servers) do
 	  vim.lsp.config[server] = {
 		  on_attach = lsp_config.on_attach,
-		  capabilities = lsp_config.get_capabilities(),
+		  capabilities = capabilities,
 	  }
   end
+
+  -- Tailwind CSS with custom classRegex
+  vim.lsp.config.tailwindcss = {
+	  on_attach = lsp_config.on_attach,
+	  capabilities = capabilities,
+	  root_markers = {
+		  "tailwind.config.mjs",
+		  "tailwind.config.js",
+		  "tailwind.config.cjs",
+		  "tailwind.config.ts",
+		  "package.json",
+	  },
+	  settings = {
+		  tailwindCSS = {
+			  experimental = {
+				  classRegex = {
+					  { "cn\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+					  { "classify\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+				  },
+			  },
+		  },
+	  },
+  }
 
   -- Enable all configured servers
   vim.lsp.enable({

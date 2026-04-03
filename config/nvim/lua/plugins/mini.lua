@@ -219,9 +219,9 @@ return {
 				})
 			end
 
-			-- Make functions globally available
-			_G.pick_which_key = pick_which_key
-			_G.pick_keymaps = pick_keymaps
+			-- Make functions available for keymaps
+			local _pick_which_key = pick_which_key
+			local _pick_keymaps = pick_keymaps
 		end,
 		keys = {
 			{ "<leader><leader>", "<cmd>Pick files<cr>", desc = "Find Files" },
@@ -236,7 +236,7 @@ return {
 			{
 				"<leader>fG",
 				function()
-					require("mini.pick").builtin.grep({ tool = "rg" }) -- prompts for pattern
+					require("mini.pick").builtin.grep({ tool = "rg" })
 				end,
 				desc = "Grep (rg)",
 			},
@@ -250,16 +250,9 @@ return {
 			{
 				"<leader>fk",
 				function()
-					_G.pick_keymaps()
+					require("mini.extra").pickers.keymaps()
 				end,
 				desc = "Find All Keymaps",
-			},
-			{
-				"<leader>fK",
-				function()
-					_G.pick_which_key()
-				end,
-				desc = "Find Which-Key Commands",
 			},
 		},
 	},

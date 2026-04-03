@@ -36,5 +36,5 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   ui = { border = "rounded" },
   install = { colorscheme = { "" } },
-  checker = { enabled = true },
+  checker = { enabled = true, frequency = 1209600 },
 })

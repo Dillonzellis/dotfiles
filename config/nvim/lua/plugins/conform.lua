@@ -29,11 +29,15 @@ return {
 				bash = { "shfmt" },
 				sh = { "shfmt" },
 			},
-			format_on_save = {
-				-- These options will be passed to conform.format()
-				timeout_ms = 3000,
-				lsp_fallback = true,
-			},
+			format_on_save = function()
+				if vim.g.disable_autoformat then
+					return
+				end
+				return {
+					timeout_ms = 3000,
+					lsp_fallback = true,
+				}
+			end,
 			formatters = {
 				prettier = {
 					options = {

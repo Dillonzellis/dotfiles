@@ -1,25 +1,26 @@
 return {
-	"ggandor/leap.nvim",
-	keys = {
-		{ "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
-		{ "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
-	},
+	"andyg/leap.nvim",
+	url = "https://codeberg.org/andyg/leap.nvim",
+	lazy = false,
 	config = function()
 		local leap = require("leap")
 
-		-- Add default mappings
-		leap.add_default_mappings()
+		vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)", { desc = "Leap forward to" })
+		vim.keymap.set("n", "S", "<Plug>(leap-from-window)", { desc = "Leap from window" })
 
-		-- Recommended: Reduce visual noise with preview filter
-		-- Excludes whitespace and middle of words from preview
-		leap.opts.preview_filter = function(ch0, ch1, ch2)
-			return not (ch1:match("%s") or ch0:match("%a") and ch1:match("%a") and ch2:match("%a"))
+		leap.opts.preview = function(ch0, ch1, ch2)
+			return not (ch1:match("%s") or (ch0:match("%a") and ch1:match("%a") and ch2:match("%a")))
 		end
 
-		-- Recommended: Group similar characters for easier targeting
 		leap.opts.equivalence_classes = { " \t\r\n", "([{", ")]}", "'\"`" }
 
-		-- Recommended: Use enter/backspace to repeat last motion
-		require("leap.user").set_repeat_keys("<enter>", "<backspace>")
+		-- Repeat last leap with enter/backspace
+		local clever = require("leap.user").with_traversal_keys
+		vim.keymap.set({ "n", "x", "o" }, "<cr>", function()
+			leap.leap({ ["repeat"] = true, opts = clever("<cr>", "<bs>") })
+		end, { desc = "Leap repeat forward" })
+		vim.keymap.set({ "n", "x", "o" }, "<bs>", function()
+			leap.leap({ ["repeat"] = true, opts = clever("<bs>", "<cr>"), backward = true })
+		end, { desc = "Leap repeat backward" })
 	end,
 }
