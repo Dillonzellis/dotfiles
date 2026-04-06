@@ -91,3 +91,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 # export PATH=$PATH:/Users/dillon.ellis/.spicetify
 
 # export PATH=$PATH:/Users/dillonellis/.spicetify
+
+# opencode
+export PATH=/Users/dillon.ellis/.opencode/bin:$PATH
