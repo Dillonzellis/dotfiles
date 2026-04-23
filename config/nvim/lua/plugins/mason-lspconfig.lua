@@ -122,8 +122,12 @@ return {
 	  },
 	  settings = {
 		  tailwindCSS = {
+			  lint = {
+				  suggestCanonicalClasses = "warning",
+			  },
 			  experimental = {
 				  classRegex = {
+					  { "class(?:Name)?\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
 					  { "cn\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
 					  { "classify\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
 				  },
