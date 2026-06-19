@@ -94,3 +94,14 @@ export PATH=$PATH:/Users/dillon.ellis/.spicetify
 
 # opencode
 export PATH=/Users/dillon.ellis/.opencode/bin:$PATH
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+# pnpm
+export PNPM_HOME="/Users/dillon.ellis/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
