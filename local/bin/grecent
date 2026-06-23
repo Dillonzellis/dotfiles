@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+show_help() {
+  cat <<'EOF'
+Usage:
+  grecent [option]
+
+Options:
+  -s, --switch    Pick a recent branch with fzf and switch to it
+  -h, --help      Show this help menu
+
+Examples:
+  grecent
+  grecent --switch
+  grecent -s
+
+What it does:
+  grecent reads your git reflog, finds recent branch checkouts,
+  removes duplicates, and prints the most recent branches.
+
+  With --switch, it sends that list to fzf and runs:
+
+    git switch <selected-branch>
+EOF
+}
+
+ensure_git_repo() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Not inside a git repository." >&2
+    exit 1
+  fi
+}
+
+list_recent_branches() {
+  git reflog --date=short |
+    sed -nE 's/.*checkout: moving from .* to ([^ ]+).*/\1/p' |
+    awk '!seen[$0]++' |
+    head -n 10
+}
+
+switch_recent_branch() {
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "fzf is not installed or not available in PATH." >&2
+    exit 1
+  fi
+
+  local selected
+
+  selected=$(list_recent_branches | fzf --prompt="Switch branch> " || true)
+
+  if [[ -z "$selected" ]]; then
+    echo "No branch selected." >&2
+    exit 0
+  fi
+
+  git switch "$selected"
+}
+
+case "${1:-}" in
+  -h|--help)
+    show_help
+    exit 0
+    ;;
+
+  -s|--switch)
+    ensure_git_repo
+    switch_recent_branch
+    exit 0
+    ;;
+
+  "")
+    ensure_git_repo
+    list_recent_branches
+    exit 0
+    ;;
+
+  *)
+    echo "Unknown option: $1" >&2
+    echo >&2
+    show_help >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+set -e
+
+show_help() {
+  cat <<'EOF'
+Usage:
+  gc <commit message> [git commit flags...]
+
+Examples:
+  gc "fix image placeholder"
+  gc "fix image placeholder" -n
+  gc "fix image placeholder" --amend
+  gc "fix image placeholder" --no-verify
+
+What it does:
+  If your current branch has a slash, like:
+
+    ABC-123/fixImagePlaceholder
+
+  then the part before the slash is used as the commit prefix:
+
+    ABC-123/fix image placeholder-Dillon
+
+  If your branch has no slash, like:
+
+    main
+
+  then it commits as:
+
+    fix image placeholder-Dillon
+EOF
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  show_help
+  exit 0
+fi
+
+if [[ $# -eq 0 ]]; then
+  show_help >&2
+  exit 1
+fi
+
+if ! branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); then
+  echo "Not inside a git repository." >&2
+  exit 1
+fi
+
+message="$1"
+shift
+
+if [[ "$branch" == */* ]]; then
+  prefix="${branch%%/*}"
+  git commit "$@" -m "$prefix/$message-Dillon"
+else
+  git commit "$@" -m "$message-Dillon"
+fi
