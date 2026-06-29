@@ -59,20 +59,6 @@ vim.keymap.set("n", "<leader>pa", function()
 	print("file (proj-rel):", rel)
 end, { desc = "Copy file path (git root-relative)" })
 
--- ESLint fix-all on save for JS/TS files
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
-	callback = function()
-		vim.lsp.buf.code_action({
-			context = {
-				only = { "source.fixAll.eslint" },
-				diagnostics = {},
-			},
-			apply = true,
-		})
-	end,
-})
-
 -- Open Org files fully expanded
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "org",

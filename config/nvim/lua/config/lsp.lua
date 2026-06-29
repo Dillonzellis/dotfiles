@@ -100,9 +100,9 @@ function M.on_attach(client, bufnr)
 	-- Highlight symbol under cursor
 	if client.supports_method("textDocument/documentHighlight") then
 		local highlight_client_id = client.id
-		vim.api.nvim_create_augroup("lsp_document_highlight_" .. bufnr, { clear = true })
+		local hl_group = vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
 		vim.api.nvim_create_autocmd("CursorHold", {
-			group = "lsp_document_highlight_" .. bufnr,
+			group = hl_group,
 			buffer = bufnr,
 			callback = function()
 				local c = vim.lsp.get_client_by_id(highlight_client_id)
@@ -113,7 +113,7 @@ function M.on_attach(client, bufnr)
 			end,
 		})
 		vim.api.nvim_create_autocmd("CursorMoved", {
-			group = "lsp_document_highlight_" .. bufnr,
+			group = hl_group,
 			buffer = bufnr,
 			callback = vim.lsp.buf.clear_references,
 		})

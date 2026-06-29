@@ -81,17 +81,12 @@ return {
 				  enable = true,
 			  },
 		  },
-		  codeActionOnSave = {
-			  enable = true,
-			  mode = "all",
-		  },
-		  format = true,
 		  nodePath = "",
 		  onIgnoredFiles = "off",
 		  packageManager = "npm",
 		  quiet = false,
 		  rulesCustomizations = {},
-		  run = "onType",
+		  run = "onSave",
 		  useESLintClass = false,
 		  validate = "on",
 		  workingDirectory = {
