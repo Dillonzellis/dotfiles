@@ -23,4 +23,7 @@ alias desk="cd ~/Desktop"
 alias ns="npx fusion start"
 alias ajcdev="npx cross-env NODE_OPTIONS=--no-deprecation next dev --turbo"
 
-alias dsu='~/.local/bin/dsu-aerospace.sh'
+alias dsu="~/.local/bin/dsu-aerospace.sh"
+
+alias topic="node ~/orgfiles/projects/roadmap/topic-picker.js"
+

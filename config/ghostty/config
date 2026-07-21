@@ -1,9 +1,9 @@
 # theme = Liquid Carbon Transparent
 theme = Kanagawa Dragon
 font-size = 15
-background-opacity = 0.95
+background-opacity = 0.85
 font-family = "0xProto Nerd Font"
-background-blur = 0
+background-blur = 10
 
 title = " "
 clipboard-trim-trailing-spaces = true
