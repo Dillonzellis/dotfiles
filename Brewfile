@@ -1,7 +1,6 @@
 # Usage: brew bundle --file=Brewfile
 
 tap "hashicorp/tap"
-tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "mongodb/brew"
 tap "smudge/smudge"
@@ -29,7 +28,7 @@ brew "zsh-syntax-highlighting"
 brew "sk"                           
 brew "cmatrix"
 brew "fd"                         
-brew "htop"                       
+# brew "htop"                       
 brew "bat"                        
 brew "dysk"
 brew "btop"                       
@@ -83,7 +82,7 @@ cask "aerospace"
 # cask "visual-studio-code"         
 # cask "docker"                     
 
-cask "notion"                     
+# cask "notion"                     
 
 cask "firefox"                    
 cask "google-chrome"              

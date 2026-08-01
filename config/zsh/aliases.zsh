@@ -5,7 +5,8 @@ alias rf="rm -rf"
 alias vi="nvim"
 alias cat="bat"
 alias df="dysk"
-alias ls="eza --icons"
+alias ls="eza --icons auto"
+alias htop="btop"
 
 alias gs="git status"
 
@@ -26,4 +27,3 @@ alias ajcdev="npx cross-env NODE_OPTIONS=--no-deprecation next dev --turbo"
 alias dsu="~/.local/bin/dsu-aerospace.sh"
 
 alias topic="node ~/orgfiles/projects/roadmap/topic-picker.js"
-

@@ -1,6 +1,9 @@
 return {
-	"williamboman/mason-lspconfig.nvim",
-	dependencies = { "mason.nvim", "nvim-lspconfig" },
+	"mason-org/mason-lspconfig.nvim",
+	dependencies = {
+		"mason-org/mason.nvim",
+		"neovim/nvim-lspconfig",
+	},
 	config = function()
 		local lsp_config = require("config.lsp")
 		local capabilities = lsp_config.get_capabilities()
@@ -67,80 +70,81 @@ return {
 			},
 		}
 
-		-- ⭐ ESLint Language Server configuration
-  vim.lsp.config.eslint = {
-	  on_attach = lsp_config.on_attach,
-	  capabilities = capabilities,
-	  settings = {
-		  codeAction = {
-			  disableRuleComment = {
-				  enable = true,
-				  location = "separateLine",
-			  },
-			  showDocumentation = {
-				  enable = true,
-			  },
-		  },
-		  nodePath = "",
-		  onIgnoredFiles = "off",
-		  packageManager = "npm",
-		  quiet = false,
-		  rulesCustomizations = {},
-		  run = "onSave",
-		  useESLintClass = false,
-		  validate = "on",
-		  workingDirectory = {
-			  mode = "auto",
-		  },
-	  },
-  }
+		--  ESLint Language Server configuration
+		vim.lsp.config.eslint = {
+			on_attach = lsp_config.on_attach,
+			capabilities = capabilities,
+			settings = {
+				codeAction = {
+					disableRuleComment = {
+						enable = true,
+						location = "separateLine",
+					},
+					showDocumentation = {
+						enable = true,
+					},
+				},
+				nodePath = "",
+				onIgnoredFiles = "off",
+				packageManager = "npm",
+				quiet = false,
+				rulesCustomizations = {},
+				run = "onSave",
+				useESLintClass = false,
+				validate = "on",
+				workingDirectory = {
+					mode = "auto",
+				},
+			},
+		}
 
-  -- Other servers with default configuration
-  local default_servers = { "html", "cssls", "bashls", "jsonls" }
-  for _, server in ipairs(default_servers) do
-	  vim.lsp.config[server] = {
-		  on_attach = lsp_config.on_attach,
-		  capabilities = capabilities,
-	  }
-  end
+		-- Other servers with default configuration
+		local default_servers = { "html", "cssls", "bashls", "jsonls" }
+		for _, server in ipairs(default_servers) do
+			vim.lsp.config[server] = {
+				on_attach = lsp_config.on_attach,
+				capabilities = capabilities,
+			}
+		end
 
-  -- Tailwind CSS with custom classRegex
-  vim.lsp.config.tailwindcss = {
-	  on_attach = lsp_config.on_attach,
-	  capabilities = capabilities,
-	  root_markers = {
-		  "tailwind.config.mjs",
-		  "tailwind.config.js",
-		  "tailwind.config.cjs",
-		  "tailwind.config.ts",
-		  "package.json",
-	  },
-	  settings = {
-		  tailwindCSS = {
-			  lint = {
-				  suggestCanonicalClasses = "warning",
-			  },
-			  experimental = {
-				  classRegex = {
-					  { "class(?:Name)?\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
-					  { "cn\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
-					  { "classify\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
-					  { "tv\\s*\\(([\\s\\S]*?)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
-				  },
-			  },
-		  },
-	  },
-  }
+		-- Tailwind CSS with custom classRegex
+		vim.lsp.config.tailwindcss = {
+			on_attach = lsp_config.on_attach,
+			capabilities = capabilities,
+			root_markers = {
+				"tailwind.config.mjs",
+				"tailwind.config.js",
+				"tailwind.config.cjs",
+				"tailwind.config.ts",
+				"package.json",
+			},
+			settings = {
+				tailwindCSS = {
+					lint = {
+						suggestCanonicalClasses = "warning",
+					},
+					experimental = {
+						classRegex = {
+							{ "class(?:Name)?\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
+							{ "cn\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+							{ "classify\\s*\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+							{ "tv\\s*\\(([\\s\\S]*?)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+						},
+					},
+				},
+			},
+		}
 
-  -- Enable all configured servers
-  vim.lsp.enable({
-	  "lua_ls",
-	  "vtsls",
-	  "html",
-	  "cssls",
-	  "tailwindcss",
-	  "bashls",
-	  "jsonls",
-	  "eslint",
-  })  end,
+		-- Enable all configured servers
+		vim.lsp.enable({
+			"lua_ls",
+			"vtsls",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"bashls",
+			"jsonls",
+			"eslint",
+		})
+	end,
 }
