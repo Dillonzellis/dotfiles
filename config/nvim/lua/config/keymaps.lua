@@ -2,6 +2,9 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "Q", "<nop>")
+
+vim.keymap.set({ "n", "i", "x", "s", "o", "c", "t" }, "<F1>", "<Nop>", { desc = "Disable F1 help" })
 
 vim.keymap.set("n", "<leader>w", ":set wrap!<CR>", { desc = "Toggle Wrap" })
 vim.keymap.set("n", "<leader>ln", ":set relativenumber!<CR>", { desc = "Toggle Relative Number" })

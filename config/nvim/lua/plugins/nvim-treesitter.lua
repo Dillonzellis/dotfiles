@@ -60,12 +60,15 @@ return {
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = filetypes,
 
-				callback = function()
-					-- Syntax highlighting
-					vim.treesitter.start()
+				callback = function(args)
+					-- Treesitter highlighting
+					vim.treesitter.start(args.buf)
+
+					-- Traditional Vim syntax highlighting as a fallback
+					vim.bo[args.buf].syntax = "ON"
 
 					-- Treesitter-based indentation
-					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 				end,
 			})
 		end,
