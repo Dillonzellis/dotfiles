@@ -11,7 +11,7 @@ alias htop="btop"
 alias gs="git status"
 
 alias nl="nightlight toggle"
-alias nld="nightlight temp 50"
+alias nld="nightlight temp 70"
 alias nln="nightlight temp 100"
 alias nls="nightlight status && nightlight temp"
 
