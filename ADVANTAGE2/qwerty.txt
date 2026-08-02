@@ -1,0 +1,7 @@
+[caps]>[lctrl]
+[lctrl]>[lwin]
+[rwin]>[lwin]
+[rctrl]>[lalt]
+[kp-lctrl]>[lwin]
+[kp-rwin]>[lwin]
+[kp-rctrl]>[rwin]
