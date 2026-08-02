@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# DOES NOT WORK ATM TIS OUTDATED. LEAVING FOR REFERENCE UNTIL I FIX THE BOOTSTRAP SCRIPT.
+
 # Bootstrap Dotfiles Installation Script
 # Usage: curl -sSL https://raw.githubusercontent.com/Dillonzellis/dotfiles/master/bootstrap.sh | bash
 
