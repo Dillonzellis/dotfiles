@@ -1,57 +1,79 @@
 return {
 	-- Currently active colorscheme
 	-- {
-	--   "folke/tokyonight.nvim",
-	--   lazy = false,
-	--   priority = 1000,
-	--   opts = {
-	--     style = "moon", -- storm, moon, night, day
-	--     transparent = true,
-	--     styles = {
-	--       sidebars = "transparent",
-	--       floats = "transparent",
-	--     },
-	--   },
-	--   config = function(_, opts)
-	--     require("tokyonight").setup(opts)
-	--     vim.cmd.colorscheme("tokyonight")
-	--   end,
-	-- },
-
-	-- {
-	--   "ellisonleao/gruvbox.nvim",
-	--   lazy = false,
-	--   priority = 1000,
-	--   opts = {
-	--     transparent_mode = true,
-	--   },
-	--   config = function(_, opts)
-	--     require("gruvbox").setup(opts)
-	--     vim.cmd.colorscheme("gruvbox")
-	--   end,
+	-- 	"folke/tokyonight.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {
+	-- 		style = "moon", -- storm, moon, night, day
+	-- 		transparent = true,
+	-- 		styles = {
+	-- 			sidebars = "transparent",
+	-- 			floats = "transparent",
+	-- 		},
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("tokyonight").setup(opts)
+	-- 		vim.cmd.colorscheme("tokyonight")
+	-- 	end,
 	-- },
 
 	{
-		"rebelot/kanagawa.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			require("kanagawa").setup({
-				transparent = true,
-				colors = {
-					theme = {
-						all = {
-							ui = {
-								bg_gutter = "none",
-							},
-						},
-					},
-				},
-			})
-			vim.cmd.colorscheme("kanagawa")
+		"tiagovla/tokyodark.nvim",
+		opts = {
+			transparent_background = true,
+		},
+		config = function(_, opts)
+			require("tokyodark").setup(opts) -- calling setup is optional
+			vim.cmd([[colorscheme tokyodark]])
 		end,
 	},
 
+	-- {
+	-- 	"ellisonleao/gruvbox.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {
+	-- 		transparent_mode = true,
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("gruvbox").setup(opts)
+	-- 		vim.cmd.colorscheme("gruvbox")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"lunarvim/synthwave84.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {
+	-- 		transparent_mode = true,
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("gruvbox").setup(opts)
+	-- 		vim.cmd.colorscheme("gruvbox")
+	-- 	end,
+	-- },
+	-- {
+	-- 	"rebelot/kanagawa.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		require("kanagawa").setup({
+	-- 			transparent = true,
+	-- 			colors = {
+	-- 				theme = {
+	-- 					all = {
+	-- 						ui = {
+	-- 							bg_gutter = "none",
+	-- 						},
+	-- 					},
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 		vim.cmd.colorscheme("kanagawa")
+	-- 	end,
+	-- },
+	--
 	-- {
 	-- 	"EdenEast/nightfox.nvim",
 	-- 	lazy = false,
@@ -66,7 +88,7 @@ return {
 	-- 		vim.cmd.colorscheme("carbonfox") -- or nightfox, dawnfox, etc.
 	-- 	end,
 	-- },
-
+	--
 	-- {
 	-- 	"neanias/everforest-nvim",
 	-- 	lazy = false,
@@ -79,17 +101,17 @@ return {
 	-- 		vim.cmd.colorscheme("everforest")
 	-- 	end,
 	-- },
-
+	--
 	-- {
-	--   "scottmckendry/cyberdream.nvim",
-	--   lazy = false,
-	--   priority = 1000,
-	--   opts = {
-	--     transparent = true,
-	--   },
-	--   config = function(_, opts)
-	--     require("cyberdream").setup(opts)
-	--     vim.cmd.colorscheme("cyberdream")
-	--   end,
+	-- 	"scottmckendry/cyberdream.nvim",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	opts = {
+	-- 		transparent = true,
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("cyberdream").setup(opts)
+	-- 		vim.cmd.colorscheme("cyberdream")
+	-- 	end,
 	-- },
 }
