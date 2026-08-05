@@ -7,4 +7,4 @@ source "$ZSH_CONFIG/nvm.zsh"
 source "$ZSH_CONFIG/tools.zsh"
 source "$ZSH_CONFIG/plugins.zsh"
 
-PROMPT='%F{#b5fd89}%~ %f% '
+PROMPT='%F{#95c561}%~ %f% '
