@@ -2,7 +2,7 @@ return {
   "folke/trouble.nvim",
   opts = {
     win = {
-      size = { width = 100 }, -- width in characters
+      size = { width = 100, height = 30 }, -- width and height in characters
     },
   },
   cmd = "Trouble",
