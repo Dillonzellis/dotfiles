@@ -1,7 +1,7 @@
 # theme = Liquid Carbon Transparent
 theme = tokyodark.txt
 font-size = 15
-background-opacity = 0.9
+background-opacity = 0.97
 font-family = "0xProto Nerd Font"
 background-blur = 0
 
