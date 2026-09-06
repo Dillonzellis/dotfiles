@@ -5,6 +5,7 @@ DIRS=(
   "$HOME/wks"
   "$HOME/dotfiles"
   "$HOME/orgfiles"
+  "$HOME/aleph"
 )
 
 FD_BIN="$(command -v fd || command -v fdfind || true)"
