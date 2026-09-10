@@ -37,22 +37,46 @@ function M.setup_lsp_keymaps(bufnr)
 	-- Navigation
 	vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
 	vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "References" }))
-	vim.keymap.set("n", "gI", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
-	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+	vim.keymap.set(
+		"n",
+		"gI",
+		vim.lsp.buf.implementation,
+		vim.tbl_extend("force", opts, { desc = "Go to implementation" })
+	)
+	vim.keymap.set(
+		"n",
+		"gy",
+		vim.lsp.buf.type_definition,
+		vim.tbl_extend("force", opts, { desc = "Go to type definition" })
+	)
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
 	vim.keymap.set("n", "gK", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
 	vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
 
 	-- Code actions
-	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
+	vim.keymap.set(
+		{ "n", "v" },
+		"<leader>ca",
+		vim.lsp.buf.code_action,
+		vim.tbl_extend("force", opts, { desc = "Code action" })
+	)
 	vim.keymap.set("n", "<leader>cc", vim.lsp.codelens.run, vim.tbl_extend("force", opts, { desc = "Run codelens" }))
-	vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, vim.tbl_extend("force", opts, { desc = "Refresh codelens" }))
+	vim.keymap.set(
+		"n",
+		"<leader>cC",
+		vim.lsp.codelens.refresh,
+		vim.tbl_extend("force", opts, { desc = "Refresh codelens" })
+	)
 	vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
 
-
 	-- Diagnostics
-	vim.keymap.set("n", "<leader>cd", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Open diagnostic float" }))
+	vim.keymap.set(
+		"n",
+		"<leader>cd",
+		vim.diagnostic.open_float,
+		vim.tbl_extend("force", opts, { desc = "Open diagnostic float" })
+	)
 	vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
 	vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
 	vim.keymap.set("n", "]e", function()
@@ -118,8 +142,6 @@ function M.on_attach(client, bufnr)
 			callback = vim.lsp.buf.clear_references,
 		})
 	end
-
-
 end
 
 -- Status line integration (cached, updated only on LSP attach/detach)
@@ -195,7 +217,8 @@ function M.setup()
 		end,
 	})
 
-	vim.o.statusline = "%{%v:lua.k_mode()%} %f %m%r%h%w [%{&ft}] %{v:lua.require('config.lsp').get_lsp_status()} %= %l,%c %P"
+	vim.o.statusline =
+		"%{%v:lua.k_mode()%} %f %m%r%h%w [%{&ft}] %{v:lua.require('config.lsp').get_lsp_status()} %= %l,%c %P"
 end
 
 return M
